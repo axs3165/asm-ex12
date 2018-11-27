@@ -224,14 +224,109 @@ UART0_S2_NO_RXINV_BRK10_NO_LBKDETECT_CLEAR_FLAGS  EQU  \
             EXPORT      GetChar
             ;EXPORT      GetStringSB
             EXPORT      Init_UART0_IRQ
+			EXPORT		Init_PIT_IRQ
             EXPORT      PutChar
             EXPORT      PutNumHex 
             EXPORT      PutNumUB   
             EXPORT      PutStringSB
-                
+			
+			EXPORT		PIT_IRQHandler                
             EXPORT      UART0_IRQHandler
                     
 ;>>>>> begin subroutine code <<<<<
+
+;****************************************************************
+; 	Subroutine to initialize the PIT to generate
+;	an interrupt every 0.01 s
+;
+;	Timer LDVAL: 239,999 cycles (~0.01s)
+;
+;	Init to highest priority 0
+;****************************************************************
+Init_PIT_IRQ	PROC	{R0-R14}
+                CPSID	I
+                PUSH	{LR, R0-R2}
+
+                ; set SIM_CGC6 for PIT Clock Enabled
+                LDR	    R0, =SIM_SCGC6
+                LDR	    R1, =SIM_SCGC6_PIT_MASK
+                LDR	    R2, [R0, #0]			; load current SIM_SCGC6 value
+                ORRS	R2, R2, R1				; set only PIT bit
+                STR	    R2, [R0, #0]			; update value
+
+                ; disable PIT timer 0 (PIT_TCTRL0)
+                LDR	    R0, =PIT_CH0_BASE
+                LDR	    R1, =PIT_TCTRL_TEN_MASK
+                LDR	    R2, [R0, #PIT_TCTRL_OFFSET]
+                BICS	R2, R2, R1
+                STR	    R2, [R0, #PIT_TCTRL_OFFSET]
+
+                ; set PIT IRQ priority to 0
+                LDR	    R0, =PIT_IPR
+                LDR	    R1, =(NVIC_IPR_PIT_MASK)
+                ;LDR	R3, =(PIT_IRQ_PRI << PIT_PRI_POS)
+                LDR	    R2, [R0, #0]
+                BICS	R2, R2, R1
+                ;ORRS	R2, R2, R3
+                STR	    R2, [R0, #0]
+
+                ; clear any pending PIT interrupts
+                LDR	    R0, =PIT_CH0_BASE
+                LDR	    R1, =PIT_TFLG_TIF_MASK
+                STR	    R1, [R0, #PIT_TFLG_OFFSET]
+            
+                ; unmask PIT Interrupts
+                LDR	    R0, =NVIC_ISER
+                LDR	    R1, =PIT_IRQ_MASK
+                STR	    R1, [R0, #0]
+
+                ; enable PIT module
+                LDR	    R0, =PIT_BASE
+                LDR	    R1, =PIT_MCR_EN_FRZ	; enable FRZ to stop timer in debug
+                STR	    R1, [R0, #PIT_MCR_OFFSET]
+
+                ; request interrupts for every 0.01 seconds
+                LDR	    R0, =PIT_CH0_BASE
+                LDR	    R1, =PIT_LDVAL_10ms
+                STR	    R1, [R0, #PIT_LDVAL_OFFSET]
+
+                ; enable PIT timer ch 0 for interrupts
+                LDR	    R0, =PIT_CH0_BASE
+                MOVS	R1, #PIT_TCTRL_CH_IE
+                STR	    R1, [R0, #PIT_TCTRL_OFFSET]			
+        
+                CPSIE	I
+                POP	    {R0-R2, PC}
+                ENDP
+
+;****************************************************************
+;   	PIT_ISR subroutine
+;   	Interrupt Service Routine for PIT driver
+;  
+;	On interrupt, while RunStopWatch != 0, increment Count
+;	
+;	On return, interrupt condition is cleared
+;*****************************************************************
+PIT_IRQHandler
+PIT_ISR		PROC	{R0-R14}
+			
+			LDR	    R0, =RunStopWatch
+			LDRB	R0, [R0, #0]
+			CMP	    R0, #0
+			BEQ	    ClearInt
+			
+			LDR	    R0, =Count
+			LDR	    R1, [R0, #0]
+			ADDS	R1, R1, #1
+			STR	    R1, [R0, #0] 
+
+ClearInt    LDR	    R0, =PIT_CH0_BASE
+            LDR	    R1, =PIT_TFLG_TIF_MASK
+            STR	    R1, [R0, #PIT_TFLG_OFFSET]
+
+			BX	    LR
+			ENDP 
+
 ;****************************************************************
 ;	Subroutine to initialize UART0 
 ;	for interrupt-based serial I/O
