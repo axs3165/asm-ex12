@@ -46,34 +46,6 @@ BUF_SIZE	EQU		16
 NUM_ENQD	EQU		17
 
 ;---------------------------------------------------------------
-;NVIC_ICER
-;31-00:CLRENA=masks for HW IRQ sources;
-;             read:   0 = unmasked;   1 = masked
-;             write:  0 = no effect;  1 = mask
-;12:UART0 IRQ mask
-NVIC_ICER_UART0_MASK  EQU  UART0_IRQ_MASK
-;---------------------------------------------------------------
-;NVIC_ICPR
-;31-00:CLRPEND=pending status for HW IRQ sources;
-;             read:   0 = not pending;  1 = pending
-;             write:  0 = no effect;
-;                     1 = change status to not pending
-;12:UART0 IRQ pending status
-NVIC_ICPR_UART0_MASK  EQU  UART0_IRQ_MASK
-;---------------------------------------------------------------
-;NVIC_IPR0-NVIC_IPR7
-;2-bit priority:  00 = highest; 11 = lowest
-UART0_IRQ_PRIORITY    EQU  3
-NVIC_IPR_UART0_MASK   EQU (3 << UART0_PRI_POS)
-NVIC_IPR_UART0_PRI_3  EQU (UART0_IRQ_PRIORITY << UART0_PRI_POS)
-;---------------------------------------------------------------
-;NVIC_ISER
-;31-00:SETENA=masks for HW IRQ sources;
-;             read:   0 = masked;     1 = unmasked
-;             write:  0 = no effect;  1 = unmask
-;12:UART0 IRQ mask
-NVIC_ISER_UART0_MASK  EQU  UART0_IRQ_MASK
-;---------------------------------------------------------------
 ;PORTx_PCRn (Port x pin control register n [for pin n])
 ;___->10-08:Pin mux control (select 0 to 8)
 ;Use provided PORT_PCR_MUX_SELECT_2_MASK
@@ -216,7 +188,6 @@ UART0_S1_CLEAR_FLAGS  EQU  (UART0_S1_IDLE_MASK :OR: \
 UART0_S2_NO_RXINV_BRK10_NO_LBKDETECT_CLEAR_FLAGS  EQU  \
         (UART0_S2_LBKDIF_MASK :OR: UART0_S2_RXEDGIF_MASK)
 ;---------------------------------------------------------------
-;---------------------------------------------------------------
 ;NVIC_ICER
 ;31-00:CLRENA=masks for HW IRQ sources;
 ;             read:   0 = unmasked;   1 = masked
@@ -295,7 +266,9 @@ PIT_TCTRL_CH_IE  EQU  (PIT_TCTRL_TEN_MASK :OR: PIT_TCTRL_TIE_MASK)
                     
 ;>>>>> begin subroutine code <<<<<
 
-
+;****************************************************************
+;	StartTimer
+;	
 
 ;>>>>> below has been tested and is working <<<<<
 ;****************************************************************
