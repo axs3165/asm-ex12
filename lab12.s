@@ -216,6 +216,66 @@ UART0_S1_CLEAR_FLAGS  EQU  (UART0_S1_IDLE_MASK :OR: \
 UART0_S2_NO_RXINV_BRK10_NO_LBKDETECT_CLEAR_FLAGS  EQU  \
         (UART0_S2_LBKDIF_MASK :OR: UART0_S2_RXEDGIF_MASK)
 ;---------------------------------------------------------------
+;---------------------------------------------------------------
+;NVIC_ICER
+;31-00:CLRENA=masks for HW IRQ sources;
+;             read:   0 = unmasked;   1 = masked
+;             write:  0 = no effect;  1 = mask
+;22:PIT IRQ mask
+;12:UART0 IRQ mask
+NVIC_ICER_PIT_MASK    EQU  PIT_IRQ_MASK
+NVIC_ICER_UART0_MASK  EQU  UART0_IRQ_MASK
+;---------------------------------------------------------------
+;NVIC_ICPR
+;31-00:CLRPEND=pending status for HW IRQ sources;
+;             read:   0 = not pending;  1 = pending
+;             write:  0 = no effect;
+;                     1 = change status to not pending
+;22:PIT IRQ pending status
+;12:UART0 IRQ pending status
+NVIC_ICPR_PIT_MASK    EQU  PIT_IRQ_MASK
+NVIC_ICPR_UART0_MASK  EQU  UART0_IRQ_MASK
+;---------------------------------------------------------------
+;NVIC_IPR0-NVIC_IPR7
+;2-bit priority:  00 = highest; 11 = lowest
+;--PIT
+PIT_IRQ_PRIORITY    EQU  0
+NVIC_IPR_PIT_MASK   EQU  (3 << PIT_PRI_POS)
+NVIC_IPR_PIT_PRI_0  EQU  (PIT_IRQ_PRIORITY << UART0_PRI_POS)
+;--UART0
+UART0_IRQ_PRIORITY    EQU  3
+NVIC_IPR_UART0_MASK   EQU  (3 << UART0_PRI_POS)
+NVIC_IPR_UART0_PRI_3  EQU  (UART0_IRQ_PRIORITY << UART0_PRI_POS)
+;---------------------------------------------------------------
+;NVIC_ISER
+;31-00:SETENA=masks for HW IRQ sources;
+;             read:   0 = masked;     1 = unmasked
+;             write:  0 = no effect;  1 = unmask
+;22:PIT IRQ mask
+;12:UART0 IRQ mask
+NVIC_ISER_PIT_MASK    EQU  PIT_IRQ_MASK
+NVIC_ISER_UART0_MASK  EQU  UART0_IRQ_MASK
+;---------------------------------------------------------------
+;PIT_LDVALn:  PIT load value register n
+;31-00:TSV=timer start value (period in clock cycles - 1)
+;Clock ticks for 0.01 s at 24 MHz count rate
+;0.01 s * 24,000,000 Hz = 240,000
+;TSV = 240,000 - 1
+PIT_LDVAL_10ms  EQU  239999
+;---------------------------------------------------------------
+;PIT_MCR:  PIT module control register
+;1-->    0:FRZ=freeze (continue'/stop in debug mode)
+;0-->    1:MDIS=module disable (PIT section)
+;               RTI timer not affected
+;               must be enabled before any other PIT setup
+PIT_MCR_EN_FRZ  EQU  PIT_MCR_FRZ_MASK
+;---------------------------------------------------------------
+;PIT_TCTRLn:  PIT timer control register n
+;0-->   2:CHN=chain mode (enable)
+;1-->   1:TIE=timer interrupt enable
+;1-->   0:TEN=timer enable
+PIT_TCTRL_CH_IE  EQU  (PIT_TCTRL_TEN_MASK :OR: PIT_TCTRL_TIE_MASK)
+;---------------------------------------------------------------
 ;Program
 ;C source will contain main ()
 ;Only subroutines and ISRs in this assembly source
@@ -235,6 +295,9 @@ UART0_S2_NO_RXINV_BRK10_NO_LBKDETECT_CLEAR_FLAGS  EQU  \
                     
 ;>>>>> begin subroutine code <<<<<
 
+
+
+;>>>>> below has been tested and is working <<<<<
 ;****************************************************************
 ; 	Subroutine to initialize the PIT to generate
 ;	an interrupt every 0.01 s
@@ -872,6 +935,10 @@ RxQRecord       SPACE   QRECSIZE
                 ALIGN
 MainQ           SPACE   QBUFSIZE
 MainQRecord     SPACE   QRECSIZE
+				ALIGN
+RunStopWatch    SPACE	1
+				ALIGN
+Count		    SPACE	4
 ;>>>>>   end variables here <<<<<
             ALIGN
             END
