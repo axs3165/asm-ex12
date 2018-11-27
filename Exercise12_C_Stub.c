@@ -252,4 +252,7 @@ int main (void) {
 	PutChar(input);
 	PutStringSB("\r\nTest program end", MAX_STRING);
 	
+	for(;;){
+	}
+	
 } /* main */

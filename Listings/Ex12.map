@@ -427,9 +427,9 @@ Image Symbol Table
     __use_no_semihosting_swi                 0x00000201   Thumb Code     2  use_no_semi.o(.text)
     __semihosting_library_function           0x00000203   Thumb Code     0  indicate_semi.o(.text)
     SystemInit                               0x00000205   Thumb Code   180  system_mkl46z4.o(i.SystemInit)
-    main                                     0x000002d5   Thumb Code    46  exercise12_c_stub.o(i.main)
-    Region$$Table$$Base                      0x00000340   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00000360   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x000002d5   Thumb Code    44  exercise12_c_stub.o(i.main)
+    Region$$Table$$Base                      0x0000033c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0000035c   Number         0  anon$$obj.o(Region$$Table)
     Init_LED                                 0x00000423   Thumb Code     2  lab12.o(MyCode)
     Init_PIT_IRQ                             0x0000044b   Thumb Code    68  lab12.o(MyCode)
     PIT_IRQHandler                           0x0000048f   Thumb Code     0  lab12.o(MyCode)
@@ -515,9 +515,9 @@ Memory Map of the image
     0x00000202   0x00000202   0x00000000   Code   RO          220    .text               c_p.l(indicate_semi.o)
     0x00000202   0x00000202   0x00000002   PAD
     0x00000204   0x00000204   0x000000d0   Code   RO           64    i.SystemInit        system_mkl46z4.o
-    0x000002d4   0x000002d4   0x0000006c   Code   RO            3    i.main              exercise12_c_stub.o
-    0x00000340   0x00000340   0x00000020   Data   RO          270    Region$$Table       anon$$obj.o
-    0x00000360   0x00000360   0x000000a0   PAD
+    0x000002d4   0x000002d4   0x00000068   Code   RO            3    i.main              exercise12_c_stub.o
+    0x0000033c   0x0000033c   0x00000020   Data   RO          270    Region$$Table       anon$$obj.o
+    0x0000035c   0x0000035c   0x000000a4   PAD
     0x00000400   0x00000400   0x00000010   Code   RO           54    .ARM.__at_0x400     startup_mkl46z4.o
     0x00000410   0x00000410   0x0000038c   Code   RO           45    MyCode              lab12.o
 
@@ -539,15 +539,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       108         62          0          0          0       1943   exercise12_c_stub.o
-       908        188          0         80          0       1172   lab12.o
-        68         38        192          0        256        840   startup_mkl46z4.o
+       104         60          0          0          0       1955   exercise12_c_stub.o
+       908        188          0         80          0       1180   lab12.o
+        68         38        192          0        256        856   startup_mkl46z4.o
        208         28          0          0          0        521   system_mkl46z4.o
 
     ----------------------------------------------------------------------
-      1292        316        384         80        256       4476   Object Totals
+      1288        314        388         80        256       4512   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-         0          0        160          0          0          0   (incl. Padding)
+         0          0        164          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -594,9 +594,9 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      1564        332        384         80        352       4888   Grand Totals
-      1564        332        384         80        352       4888   ELF Image Totals
-      1564        332        384         80          0          0   ROM Totals
+      1560        330        388         80        352       4924   Grand Totals
+      1560        330        388         80        352       4924   ELF Image Totals
+      1560        330        388         80          0          0   ROM Totals
 
 ==============================================================================
 
