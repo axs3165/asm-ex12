@@ -230,15 +230,8 @@
 #define TPM_SC_PS_DIV16 (0x4u)
 #define TPM_SC_CLK_DIV16 ((TPM_SC_CMOD_CLK << TPM_SC_CMOD_SHIFT) | \
                           TPM_SC_PS_DIV16)
-/*- -----*/
-/* Servo */
-#define SERVO_POSITIONS  (5)
-
-UInt16 *DAC0_table = &DAC0_table_0;
-UInt16 *PWM_duty_table = &PWM_duty_table_0;
 
 
 int main (void) {
-
-  } /* do forever */
+	  
 } /* main */
