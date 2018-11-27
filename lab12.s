@@ -280,6 +280,7 @@ LED_PORTE_MASK		EQU		LED_RED_MASK
             ;EXPORT      GetStringSB
             EXPORT      Init_UART0_IRQ
 			EXPORT		Init_PIT_IRQ
+			EXPORT		Init_LED
             EXPORT      PutChar
             EXPORT      PutNumHex 
             EXPORT      PutNumUB   

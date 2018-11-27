@@ -18,14 +18,12 @@ typedef unsigned int UInt32;
 typedef unsigned short int UInt16;
 typedef unsigned char UInt8;
 
-/* assembly language ROM table entries */
-extern UInt16 DAC0_table_0;
-extern UInt16 PWM_duty_table_0;
-
 /* assembly language subroutines */
 char GetChar (void);
 void GetStringSB (char String[], int StringBufferCapacity);
 void Init_UART0_IRQ (void);
+void Init_PIT_IRQ	(void);
+void Init_LED (void);
 void PutChar (char Character);
 void PutNumHex (UInt32);
 void PutNumUB (UInt8);

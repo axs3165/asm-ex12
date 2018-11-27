@@ -232,6 +232,24 @@
                           TPM_SC_PS_DIV16)
 
 
+
 int main (void) {
+	
+	char input;
 	  
+	__asm("CPSID   I");  /* mask interrupts */
+
+	/* Initialize UART0 module */
+	Init_UART0_IRQ ();
+	
+	/* Initialize PIT module */
+	Init_PIT_IRQ ();
+
+	__asm("CPSIE   I");  /* unmask interrupts */
+	
+	PutStringSB("Hello world! Please enter a string: ", MAX_STRING);
+	input = GetChar();
+	PutChar(input);
+	PutStringSB("\r\nTest program end", MAX_STRING);
+	
 } /* main */
