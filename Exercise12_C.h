@@ -24,6 +24,8 @@ void GetStringSB (char String[], int StringBufferCapacity);
 void Init_UART0_IRQ (void);
 void Init_PIT_IRQ	(void);
 void Init_LED (void);
+void Set_LED (char Character);
+int KeyPressed(void);
 void PutChar (char Character);
 void PutNumHex (UInt32);
 void PutNumUB (UInt8);

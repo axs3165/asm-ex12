@@ -235,7 +235,7 @@
 
 int main (void) {
 	
-	char input;
+	char input, redEnabled, greenEnabled;
 	  
 	__asm("CPSID   I");  /* mask interrupts */
 
@@ -247,12 +247,60 @@ int main (void) {
 
 	__asm("CPSIE   I");  /* unmask interrupts */
 	
-	PutStringSB("Hello world! Please enter a string: ", MAX_STRING);
-	input = GetChar();
-	PutChar(input);
-	PutStringSB("\r\nTest program end", MAX_STRING);
+	Init_LED();
+	Set_LED(0);
 	
+	redEnabled = FALSE;
+	greenEnabled = FALSE;
+	PutStringSB("LED Toggle Test. press r to toggle red, g to toggle green, h for prompt\r\n", MAX_STRING);
+	PutStringSB("\r\n> ", 4);
 	for(;;){
+		input = GetChar();
+		if (input == 'g') {
+			PutChar(input);
+			if (greenEnabled == FALSE && redEnabled == TRUE) {
+				Set_LED(3);
+				greenEnabled = TRUE;
+			}
+			else if (redEnabled == TRUE) {
+				Set_LED(2);
+				greenEnabled = FALSE;
+			}
+			else if (greenEnabled == FALSE && redEnabled == FALSE) {
+				Set_LED(1);
+				greenEnabled = TRUE;
+			}
+			else {
+				Set_LED(0);
+				greenEnabled = FALSE;
+			}
+			PutStringSB("\r\n> ", 4);
+		}
+		else if (input == 'r') {
+			PutChar(input);
+			if (redEnabled == FALSE && greenEnabled == TRUE) {
+				Set_LED(3);
+				redEnabled = TRUE;
+			}
+			else if (greenEnabled == TRUE) {
+				Set_LED(1);
+				redEnabled = FALSE;
+			}
+			else if (redEnabled == FALSE && greenEnabled == FALSE) {
+				Set_LED(2);
+				redEnabled = TRUE;
+			}
+			else {
+				Set_LED(0);
+				redEnabled = FALSE;
+			}
+			PutStringSB("\r\n> ", 4);
+		}
+		else if (input == 'h') {
+			PutChar(input);
+			PutStringSB("\r\nLED Toggle Test. press r to toggle red, g to toggle green, h for prompt", MAX_STRING);
+			PutStringSB("\r\n> ", 4);
+		}
 	}
 	
 } /* main */

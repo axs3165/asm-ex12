@@ -281,6 +281,8 @@ LED_PORTE_MASK		EQU		LED_RED_MASK
             EXPORT      Init_UART0_IRQ
 			EXPORT		Init_PIT_IRQ
 			EXPORT		Init_LED
+			EXPORT		Set_LED
+			EXPORT		KeyPressed
             EXPORT      PutChar
             EXPORT      PutNumHex 
             EXPORT      PutNumUB   
@@ -346,6 +348,57 @@ Init_LED		PUSH	{R0-R2}
 				STR		R1, [R0, #GPIO_PDDR_OFFSET]
 				
 				POP		{R0-R2}
+				BX		LR
+
+;****************************************************************
+;	Set_LED
+;	Turn red or green LED on or off
+;	Input: R0	bit 1	bit 0
+;				red		green
+;				0 off	0 off
+;				1 on	1 on
+;			   
+;****************************************************************
+Set_LED			PUSH	{R0-R2}
+
+SetGreen		LDR		R1, =FGPIOD_BASE
+				LDR		R2, =LED_GREEN_MASK				; prepare green addresses
+				
+				LSRS	R0, R0, #1						; check if green to be set on
+				BCS		TurnGreenOn							
+				
+				STR		R2, [R1, #GPIO_PSOR_OFFSET]		; set LED off				
+				B		SetRed
+
+TurnGreenOn		STR		R2, [R1, #GPIO_PCOR_OFFSET]		; set LED on
+				
+SetRed			LDR		R1, =FGPIOE_BASE
+				LDR		R2, =LED_RED_MASK				; prepare red addresses
+				
+				LSRS	R0, R0, #1						; check if red to be set on
+				BCS		TurnRedOn
+				
+				STR		R2, [R1, #GPIO_PSOR_OFFSET]		; set LED off
+				B		Return
+				
+TurnRedOn		STR		R2, [R1, #GPIO_PCOR_OFFSET]		; set LED on
+				
+Return			POP		{R0-R2}
+				BX		LR
+				
+				
+;****************************************************************
+;	KeyPressed
+;	Determine if a key has been pressed without 
+;	dequeueing the character or waiting until a 
+;	key has been pressed.
+;
+;	Return: R0 = NUM_ENQD for RxQueueRecord
+;			(Key has been pressed when R0 > 0)
+;*****************************************************************
+KeyPressed		LDR		R0, =RxQRecord
+				LDRB	R0, [R0, #NUM_ENQD]
+				
 				BX		LR
 
 

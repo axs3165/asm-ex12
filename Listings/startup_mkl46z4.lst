@@ -494,7 +494,7 @@ ARM Macro Assembler    Page 11
               00000100 
               00000000 
 Command Line: --debug --length=49 --width=120 --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=interwork --depend=.\objects\
-startup_mkl46z4.d -o.\objects\startup_mkl46z4.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -I
-C:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__UVISION_VERSION SETA 524" --predefine="_R
-TE_ SETA 1" --predefine="MKL46Z256xxx4 SETA 1" --list=.\listings\startup_mkl46z4.lst RTE\Device\MKL46Z256xxx4\startup_MK
-L46Z4.s
+startup_mkl46z4.d -o.\objects\startup_mkl46z4.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Inclu
+de -IC:\Keil_v5\ARM\PACK\Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__UVISION_VERSION SETA 524" --predefin
+e="_RTE_ SETA 1" --predefine="MKL46Z256xxx4 SETA 1" --list=.\listings\startup_mkl46z4.lst RTE\Device\MKL46Z256xxx4\start
+up_MKL46Z4.s
