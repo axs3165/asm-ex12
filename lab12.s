@@ -1031,6 +1031,8 @@ Fin		MOVS	R0, R2			; Move quotient to R0
 ;****************************************************************
 ;Variables
             AREA    MyData,DATA,READWRITE
+				EXPORT	Count
+				EXPORT	RunStopWatch
 ;>>>>> begin variables here <<<<<
 TxQ             SPACE   QBUFSIZE
 TxQRecord       SPACE   QRECSIZE

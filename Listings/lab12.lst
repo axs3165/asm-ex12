@@ -1376,52 +1376,54 @@ ARM Macro Assembler    Page 29 Embedded LED Game Functions and Drivers
  1031 00000000         ;****************************************************************
  1032 00000000         ;Variables
  1033 00000000                 AREA             MyData,DATA,READWRITE
- 1034 00000000         ;>>>>> begin variables here <<<<<
- 1035 00000000 00 00 00 
+ 1034 00000000                 EXPORT           Count
+ 1035 00000000                 EXPORT           RunStopWatch
+ 1036 00000000         ;>>>>> begin variables here <<<<<
+ 1037 00000000 00 00 00 
               00       TxQ     SPACE            QBUFSIZE
- 1036 00000004 00 00 00 
+ 1038 00000004 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 TxQRecord
                                SPACE            QRECSIZE
- 1037 00000016 00 00           ALIGN
- 1038 00000018 00 00 00 
-              00       RxQ     SPACE            QBUFSIZE
- 1039 0000001C 00 00 00 
+ 1039 00000016 00 00           ALIGN
+ 1040 00000018 00 00 00 
 
 
 
 ARM Macro Assembler    Page 30 Embedded LED Game Functions and Drivers
 
 
+              00       RxQ     SPACE            QBUFSIZE
+ 1041 0000001C 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 RxQRecord
                                SPACE            QRECSIZE
- 1040 0000002E 00 00           ALIGN
- 1041 00000030 00 00 00 
+ 1042 0000002E 00 00           ALIGN
+ 1043 00000030 00 00 00 
               00       MainQ   SPACE            QBUFSIZE
- 1042 00000034 00 00 00 
+ 1044 00000034 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 MainQRecord
                                SPACE            QRECSIZE
- 1043 00000046 00 00           ALIGN
- 1044 00000048 00      RunStopWatch
+ 1045 00000046 00 00           ALIGN
+ 1046 00000048 00      RunStopWatch
                                SPACE            1
- 1045 00000049 00 00 00        ALIGN
- 1046 0000004C 00 00 00 
+ 1047 00000049 00 00 00        ALIGN
+ 1048 0000004C 00 00 00 
               00       Count   SPACE            4
- 1047 00000050         ;>>>>>   end variables here <<<<<
- 1048 00000050                 ALIGN
- 1049 00000050                 END
+ 1049 00000050         ;>>>>>   end variables here <<<<<
+ 1050 00000050                 ALIGN
+ 1051 00000050                 END
 Command Line: --debug --length=49 --width=120 --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=interwork --depend=.\objects\
-lab12.d -o.\objects\lab12.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include -IC:\Keil_v5\ARM\
-PACK\Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__UVISION_VERSION SETA 524" --predefine="_RTE_ SETA 1" --p
-redefine="MKL46Z256xxx4 SETA 1" --list=.\listings\lab12.lst lab12.s
+lab12.d -o.\objects\lab12.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\
+Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 525" --prede
+fine="_RTE_ SETA 1" --predefine="MKL46Z256xxx4 SETA 1" --list=.\listings\lab12.lst lab12.s

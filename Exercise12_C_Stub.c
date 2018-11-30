@@ -231,7 +231,16 @@
 #define TPM_SC_CLK_DIV16 ((TPM_SC_CMOD_CLK << TPM_SC_CMOD_SHIFT) | \
                           TPM_SC_PS_DIV16)
 
+extern UInt32 Count;
+extern UInt8 RunStopWatch;
 
+UInt8 randomNumGen(void){
+	Count = 0;
+	RunStopWatch = 1;
+	GetChar();
+	RunStopWatch = 0;
+	return Count % 4;
+}
 
 int main (void) {
 	
@@ -250,6 +259,8 @@ int main (void) {
 	Init_LED();
 	Set_LED(0);
 	
+	PutNumUB(randomNumGen());
+	/*
 	redEnabled = FALSE;
 	greenEnabled = FALSE;
 	PutStringSB("LED Toggle Test. press r to toggle red, g to toggle green, h for prompt\r\n", MAX_STRING);
@@ -302,5 +313,6 @@ int main (void) {
 			PutStringSB("\r\n> ", 4);
 		}
 	}
-	
+	*/
+	return 0;	
 } /* main */
