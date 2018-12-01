@@ -259,7 +259,7 @@ UInt8 randomNumGen(void){
 void scoring(UInt8 time, UInt8 roundNumber){
 	UInt32 currentRoundValue = POINTS_PER_ROUND * roundNumber;
 	UInt8 timeLimit = (BASE_TIME_LIMIT * 100) - roundNumber;
-	if (time * 100 <= timeLimit){
+	if (time <= timeLimit){
 		score += currentRoundValue;
 	}
 }
@@ -301,6 +301,7 @@ int main (void) {
 	*/
 	for(;;){
 		do {
+			UInt16 RoundLength = (BASE_TIME_LIMIT * 100 ) - Round;
 			PutStringSB("Enter any character when you are ready.", MAX_STRING);
 			UInt8 color = randomNumGen();
 			// Set a LED based on the randomly generated integer
@@ -324,7 +325,11 @@ int main (void) {
 			// Start the timer
 			RunStopWatch = 1;
 			// Loop until a key is pressed
-			while (!isKeyPressed) setIsKeyPressed();
+			while (!isKeyPressed && Count <= RoundLength) setIsKeyPressed();
+			if (Count > RoundLength) {
+				PutStringSB("You took too long!\r\n", MAX_STRING);
+				break;
+			}
 			RunStopWatch = 0;
 			input = GetChar();
 			if (greenEnabled && !redEnabled && input == 'g'){
