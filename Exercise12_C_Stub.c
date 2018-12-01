@@ -20,6 +20,8 @@
 
 #define FALSE      (0)
 #define TRUE       (1)
+#define BASE_TIME_LIMIT	(11)
+#define POINTS_PER_ROUND (10)
 
 #define MAX_STRING (79)
 
@@ -233,14 +235,46 @@
 
 extern UInt32 Count;
 extern UInt8 RunStopWatch;
+UInt8 isKeyPressed = FALSE;
+UInt32 score = 0;
+UInt8 Round = 1;
 
+/*
+ * Generates a random number 0-3 for use in deciding which LEDs to enable
+ */
 UInt8 randomNumGen(void){
+	UInt8 temp;
 	Count = 0;
 	RunStopWatch = 1;
 	GetChar();
 	RunStopWatch = 0;
-	return Count % 4;
+	temp = Count;
+	Count = 0;
+	return temp % 4;
 }
+
+/*
+ * The scoring algorithm for if the user enters the correct answer in time
+ */
+void scoring(UInt8 time, UInt8 roundNumber){
+	UInt32 currentRoundValue = POINTS_PER_ROUND * roundNumber;
+	UInt8 timeLimit = (BASE_TIME_LIMIT * 100) - roundNumber;
+	if (time * 100 <= timeLimit){
+		score += currentRoundValue;
+	}
+}
+
+/*
+ * Checks assembly code to see if a key has been pressed
+ */
+void setIsKeyPressed(void){
+	if (KeyPressed() > 0){
+		isKeyPressed = TRUE;
+	} else {
+		isKeyPressed = FALSE;
+	}
+}
+
 
 int main (void) {
 	
@@ -259,60 +293,69 @@ int main (void) {
 	Init_LED();
 	Set_LED(0);
 	
-	PutNumUB(randomNumGen());
-	/*
 	redEnabled = FALSE;
 	greenEnabled = FALSE;
+	/*
 	PutStringSB("LED Toggle Test. press r to toggle red, g to toggle green, h for prompt\r\n", MAX_STRING);
 	PutStringSB("\r\n> ", 4);
-	for(;;){
-		input = GetChar();
-		if (input == 'g') {
-			PutChar(input);
-			if (greenEnabled == FALSE && redEnabled == TRUE) {
-				Set_LED(3);
-				greenEnabled = TRUE;
-			}
-			else if (redEnabled == TRUE) {
-				Set_LED(2);
-				greenEnabled = FALSE;
-			}
-			else if (greenEnabled == FALSE && redEnabled == FALSE) {
-				Set_LED(1);
-				greenEnabled = TRUE;
-			}
-			else {
-				Set_LED(0);
-				greenEnabled = FALSE;
-			}
-			PutStringSB("\r\n> ", 4);
-		}
-		else if (input == 'r') {
-			PutChar(input);
-			if (redEnabled == FALSE && greenEnabled == TRUE) {
-				Set_LED(3);
-				redEnabled = TRUE;
-			}
-			else if (greenEnabled == TRUE) {
-				Set_LED(1);
-				redEnabled = FALSE;
-			}
-			else if (redEnabled == FALSE && greenEnabled == FALSE) {
-				Set_LED(2);
-				redEnabled = TRUE;
-			}
-			else {
-				Set_LED(0);
-				redEnabled = FALSE;
-			}
-			PutStringSB("\r\n> ", 4);
-		}
-		else if (input == 'h') {
-			PutChar(input);
-			PutStringSB("\r\nLED Toggle Test. press r to toggle red, g to toggle green, h for prompt", MAX_STRING);
-			PutStringSB("\r\n> ", 4);
-		}
-	}
 	*/
+	for(;;){
+		do {
+			PutStringSB("Enter any character when you are ready.", MAX_STRING);
+			UInt8 color = randomNumGen();
+			// Set a LED based on the randomly generated integer
+			if (color == 0) {
+				Set_LED(0);
+				greenEnabled = FALSE;
+				redEnabled = FALSE;
+			}	else if (color == 1) {
+				Set_LED(1);
+				greenEnabled = TRUE;
+				redEnabled = FALSE;
+			}	else if (color == 2) {
+				Set_LED(2);
+				greenEnabled = FALSE;
+				redEnabled = TRUE;
+			} else if (color == 3) {
+				Set_LED(3);
+				greenEnabled = TRUE;
+				redEnabled = TRUE;
+			}
+			// Start the timer
+			RunStopWatch = 1;
+			// Loop until a key is pressed
+			while (!isKeyPressed) setIsKeyPressed();
+			RunStopWatch = 0;
+			input = GetChar();
+			if (greenEnabled && !redEnabled && input == 'g'){
+				scoring(Count, Round);
+				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+				PutNumUB(score);
+				PutStringSB("!\r\n", 3);
+			} else if (!greenEnabled && redEnabled && input == 'r'){
+				scoring(Count, Round);
+				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+				PutNumUB(score);
+				PutStringSB("!\r\n", 3);
+			} else if (greenEnabled && redEnabled && input == 'b'){
+				scoring(Count, Round);
+				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+				PutNumUB(score);
+				PutStringSB("!\r\n", 3);
+			} else if (!greenEnabled && !redEnabled && input == 'n'){
+				scoring(Count, Round);
+				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+				PutNumUB(score);
+				PutStringSB("!\r\n", 3);
+			} else {
+				PutStringSB("\r\nIncorrect answer, you suck. Try again next time loser.\r\n", MAX_STRING);
+				break;
+			}
+			Round ++;
+	} while (Round <= 10);
+		PutStringSB("Your final score is : ", MAX_STRING);
+		PutNumUB(score);
+	}
+	
 	return 0;	
 } /* main */

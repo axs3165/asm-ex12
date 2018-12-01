@@ -1033,6 +1033,7 @@ Fin		MOVS	R0, R2			; Move quotient to R0
             AREA    MyData,DATA,READWRITE
 				EXPORT	Count
 				EXPORT	RunStopWatch
+				EXPORT	RxQRecord
 ;>>>>> begin variables here <<<<<
 TxQ             SPACE   QBUFSIZE
 TxQRecord       SPACE   QRECSIZE
