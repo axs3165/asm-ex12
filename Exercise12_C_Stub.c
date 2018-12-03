@@ -365,6 +365,7 @@ int main (void) {
 			}
 			Round ++;
 	} while (Round <= 10);
+		// Reset the game data for a new game to be played
 		PutStringSB("Your final score is : ", MAX_STRING);
 		PutNumU(score);
 		PutStringSB("\r\n", 2);
