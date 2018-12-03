@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Ex12.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Ex12.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Nov 30 19:57:18 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Dec 03 01:50:32 2018
 <BR><P>
 <H3>Maximum Stack Usage =         20 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -404,7 +404,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[37]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[52]"></a>scoring</STRONG> (Thumb, 30 bytes, Stack size 12 bytes, exercise12_c_stub.o(i.scoring))
+<P><STRONG><a name="[52]"></a>scoring</STRONG> (Thumb, 24 bytes, Stack size 12 bytes, exercise12_c_stub.o(i.scoring))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = scoring
 </UL>
 <BR>[Called By]<UL><LI><a href="#[37]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -461,8 +461,8 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Enqueue
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumHex
-<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumU
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutStringSB
+<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumU
 </UL>
 
 <P><STRONG><a name="[4a]"></a>PutStringSB</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, lab12.o(MyCode))
@@ -475,19 +475,25 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutChar
 </UL>
 
-<P><STRONG><a name="[4c]"></a>PutNumUB</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, lab12.o(MyCode))
+<P><STRONG><a name="[4c]"></a>PutNumUB</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, lab12.o(MyCode), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumU
 </UL>
-<BR>[Called By]<UL><LI><a href="#[37]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+
+<P><STRONG><a name="[4d]"></a>PutNumU</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, lab12.o(MyCode))
+<BR><BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutChar
+<LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DIVU
+</UL>
+<BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumUB
+<LI><a href="#[37]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[37]"></a>main</STRONG> (Thumb, 428 bytes, Stack size 8 bytes, exercise12_c_stub.o(i.main))
+<P><STRONG><a name="[37]"></a>main</STRONG> (Thumb, 498 bytes, Stack size 8 bytes, exercise12_c_stub.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20 + Unknown Stack Size
 <LI>Call Chain = main &rArr; scoring
 </UL>
 <BR>[Calls]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_LED
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutStringSB
-<LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumUB
+<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumU
 <LI><a href="#[45]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_UART0_IRQ
 <LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_PIT_IRQ
 <LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Init_LED
@@ -514,13 +520,6 @@ Local Symbols
 <P><STRONG><a name="[48]"></a>Enqueue</STRONG> (Thumb, 64 bytes, Stack size 0 bytes, lab12.o(MyCode))
 <BR><BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutChar
 <LI><a href="#[17]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_IRQHandler
-</UL>
-
-<P><STRONG><a name="[4d]"></a>PutNumU</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, lab12.o(MyCode))
-<BR><BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutChar
-<LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DIVU
-</UL>
-<BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PutNumUB
 </UL>
 
 <P><STRONG><a name="[4e]"></a>DIVU</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, lab12.o(MyCode))
