@@ -303,7 +303,9 @@ int main (void) {
 	for(;;){
 		do {
 			UInt16 RoundLength = (BASE_TIME_LIMIT - Round) * 100;
-			PutStringSB("Enter any character when you are ready.", MAX_STRING);
+			PutStringSB("You have ", MAX_STRING);
+			PutNumU(RoundLength / 100);
+			PutStringSB(" seconds.\r\n", MAX_STRING);
 			UInt8 color = randomNumGen();
 			// Set a LED based on the randomly generated integer
 			if (color == 0) {
@@ -324,14 +326,25 @@ int main (void) {
 				redEnabled = TRUE;
 			}
 			while (TRUE){
-			// Start the timer
-			RunStopWatch = 1;
-			// Loop until a key is pressed or the time limit has been passed
+				PutChar('>');
+				// Start the timer
+				RunStopWatch = 1;
+				// Loop until a key is pressed or the time limit has been passed
 				while (!isKeyPressed){
 					if (Count <= RoundLength){
 					setIsKeyPressed();
 					} else if (Count > RoundLength) {
-						PutStringSB("\r\nYou took too long! Try again next time loser.\r\n", MAX_STRING);
+						PutStringSB("\r\nYou took too long! The answer was ", MAX_STRING);
+						if (greenEnabled && redEnabled){
+						PutChar('b');
+					} else if (!greenEnabled && redEnabled){
+						PutChar('r');
+					} else if (greenEnabled && !redEnabled){
+						PutChar('g');
+					} else if (!greenEnabled && !redEnabled){
+						PutChar('n');
+					}
+					PutStringSB(".\r\n", MAX_STRING);
 						break;
 					}
 				}
@@ -340,32 +353,34 @@ int main (void) {
 				if (Count > RoundLength) break;
 				// Check if the user entered the right character
 				input = GetChar();
+				PutChar(input);
+				PutStringSB(":\t", 2);
 				if (greenEnabled && !redEnabled && input == 'g'){
 					scoring(Count, Round, RoundLength);
-					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutStringSB("Correct! Your current score is ", MAX_STRING);
 					PutNumU(score);
 					PutStringSB("!\r\n", 3);
 					break;
 				} else if (!greenEnabled && redEnabled && input == 'r'){
 					scoring(Count, Round, RoundLength);
-					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutStringSB("Correct! Your current score is ", MAX_STRING);
 					PutNumU(score);
 					PutStringSB("!\r\n", 3);
 					break;
 				} else if (greenEnabled && redEnabled && input == 'b'){
 					scoring(Count, Round, RoundLength);
-					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutStringSB("Correct! Your current score is ", MAX_STRING);
 					PutNumU(score);
 					PutStringSB("!\r\n", 3);
 					break;
 				} else if (!greenEnabled && !redEnabled && input == 'n'){
 					scoring(Count, Round, RoundLength);
-					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutStringSB("Correct! Your current score is ", MAX_STRING);
 					PutNumU(score);
 					PutStringSB("!\r\n", 3);
 					break;
 				} else {
-					PutStringSB("\r\nIncorrect answer, you suck. Try again, loser.", MAX_STRING);
+					PutStringSB("\r\nIncorrect answer, you suck. Try again, loser.\r\n", MAX_STRING);
 				}
 			}
 				Round ++;
@@ -377,6 +392,9 @@ int main (void) {
 		score = 0;
 		Round = 1;
 		PutStringSB("A new game has begun!\r\n", MAX_STRING);
+		PutStringSB("Enter a character when you are ready to begin.", MAX_STRING);
+		while (!isKeyPressed) setIsKeyPressed();
+		GetChar();
 	}
 	
 	return 0;	
