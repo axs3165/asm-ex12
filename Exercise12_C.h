@@ -25,6 +25,7 @@ void Init_UART0_IRQ (void);
 void Init_PIT_IRQ	(void);
 void Init_LED (void);
 void Set_LED (char Character);
+void StartTimer (void);
 int KeyPressed(void);
 void PutChar (char Character);
 void PutNumHex (UInt32);

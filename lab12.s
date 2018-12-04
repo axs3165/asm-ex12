@@ -288,6 +288,7 @@ LED_PORTE_MASK		EQU		LED_RED_MASK
             EXPORT      PutNumUB   
             EXPORT      PutStringSB
 			EXPORT		PutNumU
+            EXPORT      StartTimer
 			
 			EXPORT		PIT_IRQHandler                
             EXPORT      UART0_IRQHandler

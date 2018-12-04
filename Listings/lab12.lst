@@ -445,374 +445,374 @@ ARM Macro Assembler    Page 10 Embedded LED Game Functions and Drivers
   288 00000000                 EXPORT           PutNumUB
   289 00000000                 EXPORT           PutStringSB
   290 00000000                 EXPORT           PutNumU
-  291 00000000         
-  292 00000000                 EXPORT           PIT_IRQHandler
-  293 00000000                 EXPORT           UART0_IRQHandler
-  294 00000000         
-  295 00000000         ;>>>>> begin subroutine code <<<<<
-  296 00000000         
-  297 00000000         ;****************************************************************
-  298 00000000         ; StartTimer
-  299 00000000         ;
-  300 00000000         ; Init timer by setting RunStopWatch to 1 and reset Count to 0
-  301 00000000         ;****************************************************************
-  302 00000000 B403    StartTimer
+  291 00000000                 EXPORT           StartTimer
+  292 00000000         
+  293 00000000                 EXPORT           PIT_IRQHandler
+  294 00000000                 EXPORT           UART0_IRQHandler
+  295 00000000         
+  296 00000000         ;>>>>> begin subroutine code <<<<<
+  297 00000000         
+  298 00000000         ;****************************************************************
+  299 00000000         ; StartTimer
+  300 00000000         ;
+  301 00000000         ; Init timer by setting RunStopWatch to 1 and reset Count to 0
+  302 00000000         ;****************************************************************
+  303 00000000 B403    StartTimer
                                PUSH             {R0, R1}
-  303 00000002         
-  304 00000002 48BD            LDR              R0, =Count
-  305 00000004 2100            MOVS             R1, #0
-  306 00000006 6001            STR              R1, [R0, #0]
-  307 00000008         
-  308 00000008 48BC            LDR              R0, =RunStopWatch
-  309 0000000A 2101            MOVS             R1, #1
-  310 0000000C 7001            STRB             R1, [R0, #0]
-  311 0000000E         
-  312 0000000E BC03            POP              {R0, R1}
-  313 00000010         
-  314 00000010 4770            BX               LR
-  315 00000012         
+  304 00000002         
+  305 00000002 48BD            LDR              R0, =Count
+  306 00000004 2100            MOVS             R1, #0
+  307 00000006 6001            STR              R1, [R0, #0]
+  308 00000008         
+  309 00000008 48BC            LDR              R0, =RunStopWatch
+  310 0000000A 2101            MOVS             R1, #1
+  311 0000000C 7001            STRB             R1, [R0, #0]
+  312 0000000E         
+  313 0000000E BC03            POP              {R0, R1}
+  314 00000010         
+  315 00000010 4770            BX               LR
   316 00000012         
-  317 00000012         ;****************************************************************
-  318 00000012         ; Init_LED
-  319 00000012         ;
-  320 00000012         ; Initialize the Green and Red LEDs through PORT D and E
-  321 00000012         ;****************************************************************
-  322 00000012 B407    Init_LED
+  317 00000012         
+  318 00000012         ;****************************************************************
+  319 00000012         ; Init_LED
+  320 00000012         ;
+  321 00000012         ; Initialize the Green and Red LEDs through PORT D and E
+  322 00000012         ;****************************************************************
 
 
 
 ARM Macro Assembler    Page 11 Embedded LED Game Functions and Drivers
 
 
+  323 00000012 B407    Init_LED
                                PUSH             {R0-R2}
-  323 00000014         
-  324 00000014         ; Enable clock for ports D and E
-  325 00000014 48BA            LDR              R0, =SIM_SCGC5
-  327 00000016 49BB            LDR              R1, =(SIM_SCGC5_PORTD_MASK :OR:          SIM_SCGC5_PORTE_MASK)
-  328 00000018 6802            LDR              R2, [R0, #0]
-  329 0000001A 430A            ORRS             R2, R2, R1
-  330 0000001C 6002            STR              R2, [R0, #0]
-  331 0000001E         
-  332 0000001E         ; Select PORT E Pin 29 for GPIO to red LED
-  333 0000001E 48BA            LDR              R0, =PORTE_BASE
-  334 00000020 49BA            LDR              R1, =SET_PTE29_GPIO
-  335 00000022 6741            STR              R1, [R0, #PORTE_PCR29_OFFSET]
-  336 00000024         
-  337 00000024         ; Select PORT D Pin 5 for GPIO to green LED
-  338 00000024 48BA            LDR              R0, =PORTD_BASE
-  339 00000026 49B9            LDR              R1, =SET_PTD5_GPIO
-  340 00000028 6141            STR              R1, [R0, #PORTD_PCR5_OFFSET]
-  341 0000002A         
-  342 0000002A         ; Select data direction
-  343 0000002A 48BA            LDR              R0, =FGPIOD_BASE
-  344 0000002C 49BA            LDR              R1, =LED_PORTD_MASK
-  345 0000002E 6141            STR              R1, [R0, #GPIO_PDDR_OFFSET]
-  346 00000030         
-  347 00000030 48BA            LDR              R0, =FGPIOE_BASE
-  348 00000032 49BB            LDR              R1, =LED_PORTE_MASK
-  349 00000034 6141            STR              R1, [R0, #GPIO_PDDR_OFFSET]
-  350 00000036         
-  351 00000036 BC07            POP              {R0-R2}
-  352 00000038 4770            BX               LR
-  353 0000003A         
-  354 0000003A         ;****************************************************************
-  355 0000003A         ; Set_LED
-  356 0000003A         ; Turn red or green LED on or off
-  357 0000003A         ; Input: R0 bit 1 bit 0
-  358 0000003A         ;    red  green
-  359 0000003A         ;    0 off 0 off
-  360 0000003A         ;    1 on 1 on
-  361 0000003A         ;      
-  362 0000003A         ;****************************************************************
-  363 0000003A B407    Set_LED PUSH             {R0-R2}
-  364 0000003C         
+  324 00000014         
+  325 00000014         ; Enable clock for ports D and E
+  326 00000014 48BA            LDR              R0, =SIM_SCGC5
+  328 00000016 49BB            LDR              R1, =(SIM_SCGC5_PORTD_MASK :OR:          SIM_SCGC5_PORTE_MASK)
+  329 00000018 6802            LDR              R2, [R0, #0]
+  330 0000001A 430A            ORRS             R2, R2, R1
+  331 0000001C 6002            STR              R2, [R0, #0]
+  332 0000001E         
+  333 0000001E         ; Select PORT E Pin 29 for GPIO to red LED
+  334 0000001E 48BA            LDR              R0, =PORTE_BASE
+  335 00000020 49BA            LDR              R1, =SET_PTE29_GPIO
+  336 00000022 6741            STR              R1, [R0, #PORTE_PCR29_OFFSET]
+  337 00000024         
+  338 00000024         ; Select PORT D Pin 5 for GPIO to green LED
+  339 00000024 48BA            LDR              R0, =PORTD_BASE
+  340 00000026 49B9            LDR              R1, =SET_PTD5_GPIO
+  341 00000028 6141            STR              R1, [R0, #PORTD_PCR5_OFFSET]
+  342 0000002A         
+  343 0000002A         ; Select data direction
+  344 0000002A 48BA            LDR              R0, =FGPIOD_BASE
+  345 0000002C 49BA            LDR              R1, =LED_PORTD_MASK
+  346 0000002E 6141            STR              R1, [R0, #GPIO_PDDR_OFFSET]
+  347 00000030         
+  348 00000030 48BA            LDR              R0, =FGPIOE_BASE
+  349 00000032 49BB            LDR              R1, =LED_PORTE_MASK
+  350 00000034 6141            STR              R1, [R0, #GPIO_PDDR_OFFSET]
+  351 00000036         
+  352 00000036 BC07            POP              {R0-R2}
+  353 00000038 4770            BX               LR
+  354 0000003A         
+  355 0000003A         ;****************************************************************
+  356 0000003A         ; Set_LED
+  357 0000003A         ; Turn red or green LED on or off
+  358 0000003A         ; Input: R0 bit 1 bit 0
+  359 0000003A         ;    red  green
+  360 0000003A         ;    0 off 0 off
+  361 0000003A         ;    1 on 1 on
+  362 0000003A         ;      
+  363 0000003A         ;****************************************************************
+  364 0000003A B407    Set_LED PUSH             {R0-R2}
 
 
 
 ARM Macro Assembler    Page 12 Embedded LED Game Functions and Drivers
 
 
-  365 0000003C 49B5    SetGreen
+  365 0000003C         
+  366 0000003C 49B5    SetGreen
                                LDR              R1, =FGPIOD_BASE
-  366 0000003E 4AB6            LDR              R2, =LED_GREEN_MASK ; prepare green addresses
-  367 00000040         
-  368 00000040 0840            LSRS             R0, R0, #1  ; check if green to be set on
-  369 00000042 D201            BCS              TurnGreenOn
-  370 00000044         
-  371 00000044 604A            STR              R2, [R1, #GPIO_PSOR_OFFSET] ; set LED off    
-  372 00000046 E000            B                SetRed
-  373 00000048         
-  374 00000048 608A    TurnGreenOn
+  367 0000003E 4AB6            LDR              R2, =LED_GREEN_MASK ; prepare green addresses
+  368 00000040         
+  369 00000040 0840            LSRS             R0, R0, #1  ; check if green to be set on
+  370 00000042 D201            BCS              TurnGreenOn
+  371 00000044         
+  372 00000044 604A            STR              R2, [R1, #GPIO_PSOR_OFFSET] ; set LED off    
+  373 00000046 E000            B                SetRed
+  374 00000048         
+  375 00000048 608A    TurnGreenOn
                                STR              R2, [R1, #GPIO_PCOR_OFFSET] ; set LED on
-  375 0000004A         
-  376 0000004A 49B4    SetRed  LDR              R1, =FGPIOE_BASE
-  377 0000004C 4AB4            LDR              R2, =LED_RED_MASK ; prepare red addresses
-  378 0000004E         
-  379 0000004E 0840            LSRS             R0, R0, #1  ; check if red to be set on
-  380 00000050 D201            BCS              TurnRedOn
-  381 00000052         
-  382 00000052 604A            STR              R2, [R1, #GPIO_PSOR_OFFSET] ; set LED off
-  383 00000054 E000            B                Return
-  384 00000056         
-  385 00000056 608A    TurnRedOn
+  376 0000004A         
+  377 0000004A 49B4    SetRed  LDR              R1, =FGPIOE_BASE
+  378 0000004C 4AB4            LDR              R2, =LED_RED_MASK ; prepare red addresses
+  379 0000004E         
+  380 0000004E 0840            LSRS             R0, R0, #1  ; check if red to be set on
+  381 00000050 D201            BCS              TurnRedOn
+  382 00000052         
+  383 00000052 604A            STR              R2, [R1, #GPIO_PSOR_OFFSET] ; set LED off
+  384 00000054 E000            B                Return
+  385 00000056         
+  386 00000056 608A    TurnRedOn
                                STR              R2, [R1, #GPIO_PCOR_OFFSET] ; set LED on
-  386 00000058         
-  387 00000058 BC07    Return  POP              {R0-R2}
-  388 0000005A 4770            BX               LR
-  389 0000005C         
+  387 00000058         
+  388 00000058 BC07    Return  POP              {R0-R2}
+  389 0000005A 4770            BX               LR
   390 0000005C         
-  391 0000005C         ;****************************************************************
-  392 0000005C         ; KeyPressed
-  393 0000005C         ; Determine if a key has been pressed without 
-  394 0000005C         ; dequeueing the character or waiting until a 
-  395 0000005C         ; key has been pressed.
-  396 0000005C         ;
-  397 0000005C         ; Return: R0 = NUM_ENQD for RxQueueRecord
-  398 0000005C         ;   (Key has been pressed when R0 > 0)
-  399 0000005C         ;*****************************************************************
-  400 0000005C 48B1    KeyPressed
+  391 0000005C         
+  392 0000005C         ;****************************************************************
+  393 0000005C         ; KeyPressed
+  394 0000005C         ; Determine if a key has been pressed without 
+  395 0000005C         ; dequeueing the character or waiting until a 
+  396 0000005C         ; key has been pressed.
+  397 0000005C         ;
+  398 0000005C         ; Return: R0 = NUM_ENQD for RxQueueRecord
+  399 0000005C         ;   (Key has been pressed when R0 > 0)
+  400 0000005C         ;*****************************************************************
+  401 0000005C 48B1    KeyPressed
                                LDR              R0, =RxQRecord
-  401 0000005E 7C40            LDRB             R0, [R0, #NUM_ENQD]
-  402 00000060         
+  402 0000005E 7C40            LDRB             R0, [R0, #NUM_ENQD]
 
 
 
 ARM Macro Assembler    Page 13 Embedded LED Game Functions and Drivers
 
 
-  403 00000060 4770            BX               LR
-  404 00000062         
+  403 00000060         
+  404 00000060 4770            BX               LR
   405 00000062         
-  406 00000062         ;>>>>> below has been tested and is working <<<<<
-  407 00000062         ;****************************************************************
-  408 00000062         ;  Subroutine to initialize the PIT to generate
-  409 00000062         ; an interrupt every 0.01 s
-  410 00000062         ;
-  411 00000062         ; Timer LDVAL: 239,999 cycles (~0.01s)
-  412 00000062         ;
-  413 00000062         ; Init to highest priority 0
-  414 00000062         ;****************************************************************
-  415 00000062         Init_PIT_IRQ
+  406 00000062         
+  407 00000062         ;>>>>> below has been tested and is working <<<<<
+  408 00000062         ;****************************************************************
+  409 00000062         ;  Subroutine to initialize the PIT to generate
+  410 00000062         ; an interrupt every 0.01 s
+  411 00000062         ;
+  412 00000062         ; Timer LDVAL: 239,999 cycles (~0.01s)
+  413 00000062         ;
+  414 00000062         ; Init to highest priority 0
+  415 00000062         ;****************************************************************
+  416 00000062         Init_PIT_IRQ
                                PROC             {R0-R14}
-  416 00000062 B672            CPSID            I
-  417 00000064 B507            PUSH             {LR, R0-R2}
-  418 00000066         
-  419 00000066         ; set SIM_CGC6 for PIT Clock Enabled
-  420 00000066 48B0            LDR              R0, =SIM_SCGC6
-  421 00000068 49B0            LDR              R1, =SIM_SCGC6_PIT_MASK
-  422 0000006A 6802            LDR              R2, [R0, #0] ; load current SIM_SCGC6 value
-  423 0000006C 430A            ORRS             R2, R2, R1  ; set only PIT bit
-  424 0000006E 6002            STR              R2, [R0, #0] ; update value
-  425 00000070         
-  426 00000070         ; disable PIT timer 0 (PIT_TCTRL0)
-  427 00000070 48AF            LDR              R0, =PIT_CH0_BASE
-  428 00000072 49B0            LDR              R1, =PIT_TCTRL_TEN_MASK
-  429 00000074 6882            LDR              R2, [R0, #PIT_TCTRL_OFFSET]
-  430 00000076 438A            BICS             R2, R2, R1
-  431 00000078 6082            STR              R2, [R0, #PIT_TCTRL_OFFSET]
-  432 0000007A         
-  433 0000007A         ; set PIT IRQ priority to 0
-  434 0000007A 48AF            LDR              R0, =PIT_IPR
-  435 0000007C 49AF            LDR              R1, =(NVIC_IPR_PIT_MASK)
-  436 0000007E         ;LDR R3, =(PIT_IRQ_PRI << PIT_PRI_POS)
-  437 0000007E 6802            LDR              R2, [R0, #0]
-  438 00000080 438A            BICS             R2, R2, R1
-  439 00000082         ;ORRS R2, R2, R3
-  440 00000082 6002            STR              R2, [R0, #0]
-  441 00000084         
-  442 00000084         ; clear any pending PIT interrupts
-  443 00000084 48AA            LDR              R0, =PIT_CH0_BASE
+  417 00000062 B672            CPSID            I
+  418 00000064 B507            PUSH             {LR, R0-R2}
+  419 00000066         
+  420 00000066         ; set SIM_CGC6 for PIT Clock Enabled
+  421 00000066 48B0            LDR              R0, =SIM_SCGC6
+  422 00000068 49B0            LDR              R1, =SIM_SCGC6_PIT_MASK
+  423 0000006A 6802            LDR              R2, [R0, #0] ; load current SIM_SCGC6 value
+  424 0000006C 430A            ORRS             R2, R2, R1  ; set only PIT bit
+  425 0000006E 6002            STR              R2, [R0, #0] ; update value
+  426 00000070         
+  427 00000070         ; disable PIT timer 0 (PIT_TCTRL0)
+  428 00000070 48AF            LDR              R0, =PIT_CH0_BASE
+  429 00000072 49B0            LDR              R1, =PIT_TCTRL_TEN_MASK
+  430 00000074 6882            LDR              R2, [R0, #PIT_TCTRL_OFFSET]
+  431 00000076 438A            BICS             R2, R2, R1
+  432 00000078 6082            STR              R2, [R0, #PIT_TCTRL_OFFSET]
+  433 0000007A         
+  434 0000007A         ; set PIT IRQ priority to 0
+  435 0000007A 48AF            LDR              R0, =PIT_IPR
+  436 0000007C 49AF            LDR              R1, =(NVIC_IPR_PIT_MASK)
+  437 0000007E         ;LDR R3, =(PIT_IRQ_PRI << PIT_PRI_POS)
+  438 0000007E 6802            LDR              R2, [R0, #0]
+  439 00000080 438A            BICS             R2, R2, R1
+  440 00000082         ;ORRS R2, R2, R3
+  441 00000082 6002            STR              R2, [R0, #0]
+  442 00000084         
+  443 00000084         ; clear any pending PIT interrupts
 
 
 
 ARM Macro Assembler    Page 14 Embedded LED Game Functions and Drivers
 
 
-  444 00000086 49AB            LDR              R1, =PIT_TFLG_TIF_MASK
-  445 00000088 60C1            STR              R1, [R0, #PIT_TFLG_OFFSET]
-  446 0000008A         
-  447 0000008A         ; unmask PIT Interrupts
-  448 0000008A 48AD            LDR              R0, =NVIC_ISER
-  449 0000008C 49AD            LDR              R1, =PIT_IRQ_MASK
-  450 0000008E 6001            STR              R1, [R0, #0]
-  451 00000090         
-  452 00000090         ; enable PIT module
-  453 00000090 48AD            LDR              R0, =PIT_BASE
-  454 00000092 49A8            LDR              R1, =PIT_MCR_EN_FRZ ; enable FRZ to stop timer in debug
-  455 00000094 6001            STR              R1, [R0, #PIT_MCR_OFFSET]
-  456 00000096         
-  457 00000096         ; request interrupts for every 0.01 seconds
-  458 00000096 48A6            LDR              R0, =PIT_CH0_BASE
-  459 00000098 49AC            LDR              R1, =PIT_LDVAL_10ms
-  460 0000009A 6001            STR              R1, [R0, #PIT_LDVAL_OFFSET]
-  461 0000009C         
-  462 0000009C         ; enable PIT timer ch 0 for interrupts
-  463 0000009C 48A4            LDR              R0, =PIT_CH0_BASE
-  464 0000009E 2103            MOVS             R1, #PIT_TCTRL_CH_IE
-  465 000000A0 6081            STR              R1, [R0, #PIT_TCTRL_OFFSET]
-  466 000000A2         
-  467 000000A2 B662            CPSIE            I
-  468 000000A4 BD07            POP              {R0-R2, PC}
-  469 000000A6                 ENDP
-  470 000000A6         
-  471 000000A6         ;****************************************************************
-  472 000000A6         ;    PIT_ISR subroutine
-  473 000000A6         ;    Interrupt Service Routine for PIT driver
-  474 000000A6         ;  
-  475 000000A6         ; On interrupt, while RunStopWatch != 0, increment Count
-  476 000000A6         ; 
-  477 000000A6         ; On return, interrupt condition is cleared
-  478 000000A6         ;*****************************************************************
-  479 000000A6         PIT_IRQHandler
-  480 000000A6         PIT_ISR PROC             {R0-R14}
-  481 000000A6         
-  482 000000A6 4895            LDR              R0, =RunStopWatch
-  483 000000A8 7800            LDRB             R0, [R0, #0]
-  484 000000AA 2800            CMP              R0, #0
-  485 000000AC D003            BEQ              ClearInt
+  444 00000084 48AA            LDR              R0, =PIT_CH0_BASE
+  445 00000086 49AB            LDR              R1, =PIT_TFLG_TIF_MASK
+  446 00000088 60C1            STR              R1, [R0, #PIT_TFLG_OFFSET]
+  447 0000008A         
+  448 0000008A         ; unmask PIT Interrupts
+  449 0000008A 48AD            LDR              R0, =NVIC_ISER
+  450 0000008C 49AD            LDR              R1, =PIT_IRQ_MASK
+  451 0000008E 6001            STR              R1, [R0, #0]
+  452 00000090         
+  453 00000090         ; enable PIT module
+  454 00000090 48AD            LDR              R0, =PIT_BASE
+  455 00000092 49A8            LDR              R1, =PIT_MCR_EN_FRZ ; enable FRZ to stop timer in debug
+  456 00000094 6001            STR              R1, [R0, #PIT_MCR_OFFSET]
+  457 00000096         
+  458 00000096         ; request interrupts for every 0.01 seconds
+  459 00000096 48A6            LDR              R0, =PIT_CH0_BASE
+  460 00000098 49AC            LDR              R1, =PIT_LDVAL_10ms
+  461 0000009A 6001            STR              R1, [R0, #PIT_LDVAL_OFFSET]
+  462 0000009C         
+  463 0000009C         ; enable PIT timer ch 0 for interrupts
+  464 0000009C 48A4            LDR              R0, =PIT_CH0_BASE
+  465 0000009E 2103            MOVS             R1, #PIT_TCTRL_CH_IE
+  466 000000A0 6081            STR              R1, [R0, #PIT_TCTRL_OFFSET]
+  467 000000A2         
+  468 000000A2 B662            CPSIE            I
+  469 000000A4 BD07            POP              {R0-R2, PC}
+  470 000000A6                 ENDP
+  471 000000A6         
+  472 000000A6         ;****************************************************************
+  473 000000A6         ;    PIT_ISR subroutine
+  474 000000A6         ;    Interrupt Service Routine for PIT driver
+  475 000000A6         ;  
+  476 000000A6         ; On interrupt, while RunStopWatch != 0, increment Count
+  477 000000A6         ; 
+  478 000000A6         ; On return, interrupt condition is cleared
+  479 000000A6         ;*****************************************************************
+  480 000000A6         PIT_IRQHandler
+  481 000000A6         PIT_ISR PROC             {R0-R14}
+  482 000000A6         
+  483 000000A6 4895            LDR              R0, =RunStopWatch
+  484 000000A8 7800            LDRB             R0, [R0, #0]
+  485 000000AA 2800            CMP              R0, #0
 
 
 
 ARM Macro Assembler    Page 15 Embedded LED Game Functions and Drivers
 
 
-  486 000000AE         
-  487 000000AE 4892            LDR              R0, =Count
-  488 000000B0 6801            LDR              R1, [R0, #0]
-  489 000000B2 1C49            ADDS             R1, R1, #1
-  490 000000B4 6001            STR              R1, [R0, #0]
-  491 000000B6         
-  492 000000B6 489E    ClearInt
+  486 000000AC D003            BEQ              ClearInt
+  487 000000AE         
+  488 000000AE 4892            LDR              R0, =Count
+  489 000000B0 6801            LDR              R1, [R0, #0]
+  490 000000B2 1C49            ADDS             R1, R1, #1
+  491 000000B4 6001            STR              R1, [R0, #0]
+  492 000000B6         
+  493 000000B6 489E    ClearInt
                                LDR              R0, =PIT_CH0_BASE
-  493 000000B8 499E            LDR              R1, =PIT_TFLG_TIF_MASK
-  494 000000BA 60C1            STR              R1, [R0, #PIT_TFLG_OFFSET]
-  495 000000BC         
-  496 000000BC 4770            BX               LR
-  497 000000BE                 ENDP
-  498 000000BE         
-  499 000000BE         ;****************************************************************
-  500 000000BE         ; Subroutine to initialize UART0 
-  501 000000BE         ; for interrupt-based serial I/O
-  502 000000BE         ;****************************************************************
-  503 000000BE         Init_UART0_IRQ
+  494 000000B8 499E            LDR              R1, =PIT_TFLG_TIF_MASK
+  495 000000BA 60C1            STR              R1, [R0, #PIT_TFLG_OFFSET]
+  496 000000BC         
+  497 000000BC 4770            BX               LR
+  498 000000BE                 ENDP
+  499 000000BE         
+  500 000000BE         ;****************************************************************
+  501 000000BE         ; Subroutine to initialize UART0 
+  502 000000BE         ; for interrupt-based serial I/O
+  503 000000BE         ;****************************************************************
+  504 000000BE         Init_UART0_IRQ
                                PROC             {R0-R14}
-  504 000000BE B507            PUSH             {LR, R0-R2}
-  505 000000C0         
-  506 000000C0         ; initialize Tx queue
-  507 000000C0 48A3            LDR              R0, =TxQ
-  508 000000C2 49A4            LDR              R1, =TxQRecord
-  509 000000C4 2204            MOVS             R2, #QBUFSIZE
-  510 000000C6 F7FF FFFE       BL               InitQueue
-  511 000000CA         
-  512 000000CA         ; initialize Rx queue
-  513 000000CA 48A3            LDR              R0, =RxQ
-  514 000000CC 4995            LDR              R1, =RxQRecord
-  515 000000CE F7FF FFFE       BL               InitQueue
-  516 000000D2         
-  517 000000D2         ;Select MCGPLLCLK / 2 as UART0 clock 
-  518 000000D2 48A5            LDR              R0,=SIM_SOPT2
-  519 000000D4 49A5            LDR              R1,=SIM_SOPT2_UART0SRC_MASK
-  520 000000D6 6802            LDR              R2,[R0,#0]
-  521 000000D8 438A            BICS             R2,R2,R1
-  522 000000DA 49A5            LDR              R1,=SIM_SOPT2_UART0_MCGPLLCLK_DIV2
-  523 000000DC 430A            ORRS             R2,R2,R1
-  524 000000DE 6002            STR              R2,[R0,#0]
-  525 000000E0         
+  505 000000BE B507            PUSH             {LR, R0-R2}
+  506 000000C0         
+  507 000000C0         ; initialize Tx queue
+  508 000000C0 48A3            LDR              R0, =TxQ
+  509 000000C2 49A4            LDR              R1, =TxQRecord
+  510 000000C4 2204            MOVS             R2, #QBUFSIZE
+  511 000000C6 F7FF FFFE       BL               InitQueue
+  512 000000CA         
+  513 000000CA         ; initialize Rx queue
+  514 000000CA 48A3            LDR              R0, =RxQ
+  515 000000CC 4995            LDR              R1, =RxQRecord
+  516 000000CE F7FF FFFE       BL               InitQueue
+  517 000000D2         
+  518 000000D2         ;Select MCGPLLCLK / 2 as UART0 clock 
+  519 000000D2 48A5            LDR              R0,=SIM_SOPT2
+  520 000000D4 49A5            LDR              R1,=SIM_SOPT2_UART0SRC_MASK
+  521 000000D6 6802            LDR              R2,[R0,#0]
+  522 000000D8 438A            BICS             R2,R2,R1
+  523 000000DA 49A5            LDR              R1,=SIM_SOPT2_UART0_MCGPLLCLK_DIV2
+  524 000000DC 430A            ORRS             R2,R2,R1
+  525 000000DE 6002            STR              R2,[R0,#0]
 
 
 
 ARM Macro Assembler    Page 16 Embedded LED Game Functions and Drivers
 
 
-  526 000000E0         ;Enable external connection for UART0
-  527 000000E0 48A4            LDR              R0,=SIM_SOPT5
-  528 000000E2 49A5            LDR              R1,=SIM_SOPT5_UART0_EXTERN_MASK_CLEAR
-  529 000000E4 6802            LDR              R2,[R0,#0]
-  530 000000E6 438A            BICS             R2,R2,R1
-  531 000000E8 6002            STR              R2,[R0,#0]
-  532 000000EA         
-  533 000000EA         ;Enable clock for UART0 module
-  534 000000EA 48A4            LDR              R0,=SIM_SCGC4
-  535 000000EC 49A4            LDR              R1,=SIM_SCGC4_UART0_MASK
-  536 000000EE 6802            LDR              R2,[R0,#0]
-  537 000000F0 430A            ORRS             R2,R2,R1
-  538 000000F2 6002            STR              R2,[R0,#0]
-  539 000000F4         
-  540 000000F4         ;Enable clock for Port A module
-  541 000000F4 4882            LDR              R0,=SIM_SCGC5
-  542 000000F6 49A3            LDR              R1,=SIM_SCGC5_PORTA_MASK
-  543 000000F8 6802            LDR              R2,[R0,#0]
-  544 000000FA 430A            ORRS             R2,R2,R1
-  545 000000FC 6002            STR              R2,[R0,#0]
-  546 000000FE         
-  547 000000FE         ;Connect Port A Pin 1 (PTA1) to UART0 Rx (J1 Pin 02)
-  548 000000FE 48A2            LDR              R0,=PORTA_PCR1
-  549 00000100 49A2            LDR              R1,=PORT_PCR_SET_PTA1_UART0_RX
-  550 00000102 6001            STR              R1,[R0,#0]
-  551 00000104         
-  552 00000104         ;Connect Port A Pin 2 (PTA2) to UART0 Tx (J1 Pin 04)
-  553 00000104 48A2            LDR              R0,=PORTA_PCR2
-  554 00000106 49A1            LDR              R1,=PORT_PCR_SET_PTA2_UART0_TX
-  555 00000108 6001            STR              R1,[R0,#0]
-  556 0000010A         
-  557 0000010A         ; Disable UART0 receiver and transmitter
-  558 0000010A 48A2            LDR              R0, =UART0_BASE
-  559 0000010C 210C            MOVS             R1, #UART0_C2_T_R
-  560 0000010E 78C2            LDRB             R2, [R0, #UART0_C2_OFFSET]
-  561 00000110 438A            BICS             R2, R2, R1
-  562 00000112 70C2            STRB             R2, [R0, #UART0_C2_OFFSET]
-  563 00000114         
-  564 00000114         ; Init NVIC for UART0 interrupts
-  565 00000114 48A0            LDR              R0, =UART0_IPR
-  566 00000116         ;LDR    R1, =NVIC_IPR_UART0_MASK
-  567 00000116 4AA1            LDR              R2, =NVIC_IPR_UART0_PRI_3
+  526 000000E0         
+  527 000000E0         ;Enable external connection for UART0
+  528 000000E0 48A4            LDR              R0,=SIM_SOPT5
+  529 000000E2 49A5            LDR              R1,=SIM_SOPT5_UART0_EXTERN_MASK_CLEAR
+  530 000000E4 6802            LDR              R2,[R0,#0]
+  531 000000E6 438A            BICS             R2,R2,R1
+  532 000000E8 6002            STR              R2,[R0,#0]
+  533 000000EA         
+  534 000000EA         ;Enable clock for UART0 module
+  535 000000EA 48A4            LDR              R0,=SIM_SCGC4
+  536 000000EC 49A4            LDR              R1,=SIM_SCGC4_UART0_MASK
+  537 000000EE 6802            LDR              R2,[R0,#0]
+  538 000000F0 430A            ORRS             R2,R2,R1
+  539 000000F2 6002            STR              R2,[R0,#0]
+  540 000000F4         
+  541 000000F4         ;Enable clock for Port A module
+  542 000000F4 4882            LDR              R0,=SIM_SCGC5
+  543 000000F6 49A3            LDR              R1,=SIM_SCGC5_PORTA_MASK
+  544 000000F8 6802            LDR              R2,[R0,#0]
+  545 000000FA 430A            ORRS             R2,R2,R1
+  546 000000FC 6002            STR              R2,[R0,#0]
+  547 000000FE         
+  548 000000FE         ;Connect Port A Pin 1 (PTA1) to UART0 Rx (J1 Pin 02)
+  549 000000FE 48A2            LDR              R0,=PORTA_PCR1
+  550 00000100 49A2            LDR              R1,=PORT_PCR_SET_PTA1_UART0_RX
+  551 00000102 6001            STR              R1,[R0,#0]
+  552 00000104         
+  553 00000104         ;Connect Port A Pin 2 (PTA2) to UART0 Tx (J1 Pin 04)
+  554 00000104 48A2            LDR              R0,=PORTA_PCR2
+  555 00000106 49A1            LDR              R1,=PORT_PCR_SET_PTA2_UART0_TX
+  556 00000108 6001            STR              R1,[R0,#0]
+  557 0000010A         
+  558 0000010A         ; Disable UART0 receiver and transmitter
+  559 0000010A 48A2            LDR              R0, =UART0_BASE
+  560 0000010C 210C            MOVS             R1, #UART0_C2_T_R
+  561 0000010E 78C2            LDRB             R2, [R0, #UART0_C2_OFFSET]
+  562 00000110 438A            BICS             R2, R2, R1
+  563 00000112 70C2            STRB             R2, [R0, #UART0_C2_OFFSET]
+  564 00000114         
+  565 00000114         ; Init NVIC for UART0 interrupts
+  566 00000114 48A0            LDR              R0, =UART0_IPR
+  567 00000116         ;LDR    R1, =NVIC_IPR_UART0_MASK
 
 
 
 ARM Macro Assembler    Page 17 Embedded LED Game Functions and Drivers
 
 
-  568 00000118 6803            LDR              R3, [R0, #0]
-  569 0000011A         ;BICS   R3, R3, R1
-  570 0000011A 4313            ORRS             R3, R3, R2
-  571 0000011C 6003            STR              R3, [R0, #0]
-  572 0000011E         
-  573 0000011E         ; clear any pending UART0 pending interrupts
-  574 0000011E 48A0            LDR              R0, =NVIC_ICPR
-  575 00000120 49A0            LDR              R1, =NVIC_ICPR_UART0_MASK
-  576 00000122 6001            STR              R1, [R0, #0]
-  577 00000124         
-  578 00000124         ;unmask UART0 interrupts
-  579 00000124 4886            LDR              R0, =NVIC_ISER
-  580 00000126 499F            LDR              R1, =NVIC_ISER_UART0_MASK
-  581 00000128 6001            STR              R1, [R0, #0]
-  582 0000012A         
-  583 0000012A         ;Set UART0 for 9600 baud, 8N1 protocol
-  584 0000012A 489A            LDR              R0, =UART0_BASE
-  585 0000012C 2101            MOVS             R1,#UART0_BDH_9600
-  586 0000012E 7001            STRB             R1,[R0,#UART0_BDH_OFFSET]
-  587 00000130 2138            MOVS             R1,#UART0_BDL_9600
-  588 00000132 7041            STRB             R1,[R0,#UART0_BDL_OFFSET]
-  589 00000134 2100            MOVS             R1,#UART0_C1_8N1
-  590 00000136 7081            STRB             R1,[R0,#UART0_C1_OFFSET]
-  591 00000138 2100            MOVS             R1,#UART0_C3_NO_TXINV
-  592 0000013A 7181            STRB             R1,[R0,#UART0_C3_OFFSET]
-  593 0000013C 210F            MOVS             R1,#UART0_C4_NO_MATCH_OSR_16
-  594 0000013E 7281            STRB             R1,[R0,#UART0_C4_OFFSET]
-  595 00000140 2100            MOVS             R1,#UART0_C5_NO_DMA_SSR_SYNC
-  596 00000142 72C1            STRB             R1,[R0,#UART0_C5_OFFSET]
-  597 00000144 211F            MOVS             R1,#UART0_S1_CLEAR_FLAGS
-  598 00000146 7101            STRB             R1,[R0,#UART0_S1_OFFSET]
-  599 00000148 21C0            MOVS             R1,#UART0_S2_NO_RXINV_BRK10_NO_LBKDETECT_CLEAR_FLAGS
-  600 0000014A 7141            STRB             R1,[R0,#UART0_S2_OFFSET]
-  601 0000014C         
-  602 0000014C         ;Enable UART0 receiver and transmitter
-  603 0000014C 212C            MOVS             R1,#UART0_C2_T_RI
-  604 0000014E 70C1            STRB             R1,[R0,#UART0_C2_OFFSET]
-  605 00000150         
-  606 00000150 BD07            POP              {R0-R2, PC}
-  607 00000152                 ENDP
-  608 00000152         
+  568 00000116 4AA1            LDR              R2, =NVIC_IPR_UART0_PRI_3
+  569 00000118 6803            LDR              R3, [R0, #0]
+  570 0000011A         ;BICS   R3, R3, R1
+  571 0000011A 4313            ORRS             R3, R3, R2
+  572 0000011C 6003            STR              R3, [R0, #0]
+  573 0000011E         
+  574 0000011E         ; clear any pending UART0 pending interrupts
+  575 0000011E 48A0            LDR              R0, =NVIC_ICPR
+  576 00000120 49A0            LDR              R1, =NVIC_ICPR_UART0_MASK
+  577 00000122 6001            STR              R1, [R0, #0]
+  578 00000124         
+  579 00000124         ;unmask UART0 interrupts
+  580 00000124 4886            LDR              R0, =NVIC_ISER
+  581 00000126 499F            LDR              R1, =NVIC_ISER_UART0_MASK
+  582 00000128 6001            STR              R1, [R0, #0]
+  583 0000012A         
+  584 0000012A         ;Set UART0 for 9600 baud, 8N1 protocol
+  585 0000012A 489A            LDR              R0, =UART0_BASE
+  586 0000012C 2101            MOVS             R1,#UART0_BDH_9600
+  587 0000012E 7001            STRB             R1,[R0,#UART0_BDH_OFFSET]
+  588 00000130 2138            MOVS             R1,#UART0_BDL_9600
+  589 00000132 7041            STRB             R1,[R0,#UART0_BDL_OFFSET]
+  590 00000134 2100            MOVS             R1,#UART0_C1_8N1
+  591 00000136 7081            STRB             R1,[R0,#UART0_C1_OFFSET]
+  592 00000138 2100            MOVS             R1,#UART0_C3_NO_TXINV
+  593 0000013A 7181            STRB             R1,[R0,#UART0_C3_OFFSET]
+  594 0000013C 210F            MOVS             R1,#UART0_C4_NO_MATCH_OSR_16
+  595 0000013E 7281            STRB             R1,[R0,#UART0_C4_OFFSET]
+  596 00000140 2100            MOVS             R1,#UART0_C5_NO_DMA_SSR_SYNC
+  597 00000142 72C1            STRB             R1,[R0,#UART0_C5_OFFSET]
+  598 00000144 211F            MOVS             R1,#UART0_S1_CLEAR_FLAGS
+  599 00000146 7101            STRB             R1,[R0,#UART0_S1_OFFSET]
+  600 00000148 21C0            MOVS             R1,#UART0_S2_NO_RXINV_BRK10_NO_LBKDETECT_CLEAR_FLAGS
+  601 0000014A 7141            STRB             R1,[R0,#UART0_S2_OFFSET]
+  602 0000014C         
+  603 0000014C         ;Enable UART0 receiver and transmitter
+  604 0000014C 212C            MOVS             R1,#UART0_C2_T_RI
+  605 0000014E 70C1            STRB             R1,[R0,#UART0_C2_OFFSET]
+  606 00000150         
+  607 00000150 BD07            POP              {R0-R2, PC}
+  608 00000152                 ENDP
   609 00000152         
 
 
@@ -820,503 +820,504 @@ ARM Macro Assembler    Page 17 Embedded LED Game Functions and Drivers
 ARM Macro Assembler    Page 18 Embedded LED Game Functions and Drivers
 
 
-  610 00000152         ;****************************************************************
-  611 00000152         ;   UART0_ISR subroutine
-  612 00000152         ;   Interrupt Service Routine for UART driver
-  613 00000152         ;   
-  614 00000152         ;   Check status of interrupt and handle accordingly
-  615 00000152         ;   Tx Int enabled: write to transmit register
-  616 00000152         ;   Rx Int enabled: enqueue to transmit queue from UART receive register
-  617 00000152         *****************************************************************
-  618 00000152         UART0_IRQHandler
-  619 00000152 B672    UART0_ISR
+  610 00000152         
+  611 00000152         ;****************************************************************
+  612 00000152         ;   UART0_ISR subroutine
+  613 00000152         ;   Interrupt Service Routine for UART driver
+  614 00000152         ;   
+  615 00000152         ;   Check status of interrupt and handle accordingly
+  616 00000152         ;   Tx Int enabled: write to transmit register
+  617 00000152         ;   Rx Int enabled: enqueue to transmit queue from UART receive register
+  618 00000152         *****************************************************************
+  619 00000152         UART0_IRQHandler
+  620 00000152 B672    UART0_ISR
                                CPSID            I           ; mask interrupts
-  620 00000154 B50F            PUSH             {R0-R3, LR}
-  621 00000156         
-  622 00000156 488F            LDR              R0, =UART0_BASE
-  623 00000158 78C1            LDRB             R1, [R0, #UART0_C2_OFFSET] ; load control register 2
-  624 0000015A 2280            MOVS             R2, #0x80   ; set bit 7 in R2
-  625 0000015C 4211            TST              R1, R2      ; test with UART C2 
-  626 0000015E D00C            BEQ              RxCheck     ; if not set, check if Rx Enabled
-  627 00000160         
-  628 00000160 7901            LDRB             R1, [R0, #UART0_S1_OFFSET] ; load serial register
-  629 00000162 4211            TST              R1, R2      ; check bit 7
-  630 00000164 D009            BEQ              RxCheck     ; if not set, check if Rx Enabled 
-  631 00000166         
-  632 00000166 497B            LDR              R1, =TxQRecord ; load tx queue record address
-  633 00000168 F7FF FFFE       BL               Dequeue
-  634 0000016C D202            BCS              DisableTx   ; dequeue was unsuccessful, disable transmit interrupt
-  635 0000016E         
-  636 0000016E 4989            LDR              R1, =UART0_BASE ; dequeue was successful
-  637 00000170 71C8            STRB             R0, [R1, #UART0_D_OFFSET] ; transmit character stored in R0
-  638 00000172 E00C            B                EndISR
-  639 00000174         
-  640 00000174 212C    DisableTx
+  621 00000154 B50F            PUSH             {R0-R3, LR}
+  622 00000156         
+  623 00000156 488F            LDR              R0, =UART0_BASE
+  624 00000158 78C1            LDRB             R1, [R0, #UART0_C2_OFFSET] ; load control register 2
+  625 0000015A 2280            MOVS             R2, #0x80   ; set bit 7 in R2
+  626 0000015C 4211            TST              R1, R2      ; test with UART C2 
+  627 0000015E D00C            BEQ              RxCheck     ; if not set, check if Rx Enabled
+  628 00000160         
+  629 00000160 7901            LDRB             R1, [R0, #UART0_S1_OFFSET] ; load serial register
+  630 00000162 4211            TST              R1, R2      ; check bit 7
+  631 00000164 D009            BEQ              RxCheck     ; if not set, check if Rx Enabled 
+  632 00000166         
+  633 00000166 497B            LDR              R1, =TxQRecord ; load tx queue record address
+  634 00000168 F7FF FFFE       BL               Dequeue
+  635 0000016C D202            BCS              DisableTx   ; dequeue was unsuccessful, disable transmit interrupt
+  636 0000016E         
+  637 0000016E 4989            LDR              R1, =UART0_BASE ; dequeue was successful
+  638 00000170 71C8            STRB             R0, [R1, #UART0_D_OFFSET] ; transmit character stored in R0
+  639 00000172 E00C            B                EndISR
+  640 00000174         
+  641 00000174 212C    DisableTx
                                MOVS             R1, #UART0_C2_T_RI
-  641 00000176 70C1            STRB             R1, [R0, #UART0_C2_OFFSET] ; disable tx interrupt 
-  642 00000178 E009            B                EndISR      ; and return
-  643 0000017A         
-  644 0000017A 4886    RxCheck LDR              R0, =UART0_BASE
-  645 0000017C 7901            LDRB             R1,[R0,#UART0_S1_OFFSET] ; load Rx status
-  646 0000017E 2210            MOVS             R2, #0x10   ; set bit 5
-  647 00000180 4211            TST              R1, R2      ; check if Rx bit is set
-  648 00000182 D004            BEQ              EndISR      ; if not, return
-  649 00000184         
+  642 00000176 70C1            STRB             R1, [R0, #UART0_C2_OFFSET] ; disable tx interrupt 
+  643 00000178 E009            B                EndISR      ; and return
+  644 0000017A         
+  645 0000017A 4886    RxCheck LDR              R0, =UART0_BASE
+  646 0000017C 7901            LDRB             R1,[R0,#UART0_S1_OFFSET] ; load Rx status
+  647 0000017E 2210            MOVS             R2, #0x10   ; set bit 5
+  648 00000180 4211            TST              R1, R2      ; check if Rx bit is set
+  649 00000182 D004            BEQ              EndISR      ; if not, return
 
 
 
 ARM Macro Assembler    Page 19 Embedded LED Game Functions and Drivers
 
 
-  650 00000184 79C3            LDRB             R3, [R0, #UART0_D_OFFSET] ; recieve character and store in R3
-  651 00000186 0018            MOVS             R0, R3      ; relocate to R0 for enqueue subroutine
-  652 00000188 4966            LDR              R1, =RxQRecord ; load Rx Q record structure address
-  653 0000018A F7FF FFFE       BL               Enqueue     ; attempt to enqueue character, or ignore if full    
-  654 0000018E         
-  655 0000018E B662    EndISR  CPSIE            I
-  656 00000190 BD0F            POP              {R0-R3, PC}
-  657 00000192         
+  650 00000184         
+  651 00000184 79C3            LDRB             R3, [R0, #UART0_D_OFFSET] ; recieve character and store in R3
+  652 00000186 0018            MOVS             R0, R3      ; relocate to R0 for enqueue subroutine
+  653 00000188 4966            LDR              R1, =RxQRecord ; load Rx Q record structure address
+  654 0000018A F7FF FFFE       BL               Enqueue     ; attempt to enqueue character, or ignore if full    
+  655 0000018E         
+  656 0000018E B662    EndISR  CPSIE            I
+  657 00000190 BD0F            POP              {R0-R3, PC}
   658 00000192         
-  659 00000192         ;****************************************************************
-  660 00000192         ; GetChar Subroutine
-  661 00000192         ; Reads a single character from serial into R0
-  662 00000192         ;****************************************************************
-  663 00000192         GetChar PROC             {R1-R14}
-  664 00000192 B506            PUSH             {R1-R2, LR}
-  665 00000194         
-  666 00000194 4963            LDR              R1, =RxQRecord ; load address of Receive Queue record
-  667 00000196 B672    DequeueLoop
+  659 00000192         
+  660 00000192         ;****************************************************************
+  661 00000192         ; GetChar Subroutine
+  662 00000192         ; Reads a single character from serial into R0
+  663 00000192         ;****************************************************************
+  664 00000192         GetChar PROC             {R1-R14}
+  665 00000192 B506            PUSH             {R1-R2, LR}
+  666 00000194         
+  667 00000194 4963            LDR              R1, =RxQRecord ; load address of Receive Queue record
+  668 00000196 B672    DequeueLoop
                                CPSID            I           ; disable all interrupts
-  668 00000198 F7FF FFFE       BL               Dequeue     ; dequeue char into R0
-  669 0000019C B662            CPSIE            I           ; enable interrupts 
-  670 0000019E D2FA            BCS              DequeueLoop ; branch back while unsuccessful        
-  671 000001A0         
-  672 000001A0 BD06            POP              {R1-R2, PC}
-  673 000001A2                 ENDP
-  674 000001A2         
-  675 000001A2         ;****************************************************************
-  676 000001A2         ; PutChar Subroutine
-  677 000001A2         ; Transmits character stored in R0
-  678 000001A2         ;****************************************************************
-  679 000001A2         PutChar PROC             {R0-R14}
-  680 000001A2 B503            PUSH             {R0-R1, LR}
-  681 000001A4         
-  682 000001A4 496B            LDR              R1, =TxQRecord ; load address of Transmit Queue record
-  683 000001A6 B672    EnqueueLoop
+  669 00000198 F7FF FFFE       BL               Dequeue     ; dequeue char into R0
+  670 0000019C B662            CPSIE            I           ; enable interrupts 
+  671 0000019E D2FA            BCS              DequeueLoop ; branch back while unsuccessful        
+  672 000001A0         
+  673 000001A0 BD06            POP              {R1-R2, PC}
+  674 000001A2                 ENDP
+  675 000001A2         
+  676 000001A2         ;****************************************************************
+  677 000001A2         ; PutChar Subroutine
+  678 000001A2         ; Transmits character stored in R0
+  679 000001A2         ;****************************************************************
+  680 000001A2         PutChar PROC             {R0-R14}
+  681 000001A2 B503            PUSH             {R0-R1, LR}
+  682 000001A4         
+  683 000001A4 496B            LDR              R1, =TxQRecord ; load address of Transmit Queue record
+  684 000001A6 B672    EnqueueLoop
                                CPSID            I           ; mask all interrupts
-  684 000001A8 F7FF FFFE       BL               Enqueue     ; enqueue character in R0
-  685 000001AC B662            CPSIE            I           ; enable interrupts
-  686 000001AE D2FA            BCS              EnqueueLoop ; branch back while not successful
-  687 000001B0         
-  688 000001B0 4878            LDR              R0, =UART0_BASE
-  689 000001B2 21AC            MOVS             R1, #UART0_C2_TI_RI
+  685 000001A8 F7FF FFFE       BL               Enqueue     ; enqueue character in R0
+  686 000001AC B662            CPSIE            I           ; enable interrupts
+  687 000001AE D2FA            BCS              EnqueueLoop ; branch back while not successful
+  688 000001B0         
+  689 000001B0 4878            LDR              R0, =UART0_BASE
 
 
 
 ARM Macro Assembler    Page 20 Embedded LED Game Functions and Drivers
 
 
-  690 000001B4 70C1            STRB             R1, [R0, #UART0_C2_OFFSET] ; enable Tx interrupt
-  691 000001B6         
-  692 000001B6 BD03            POP              {R0-R1, PC}
-  693 000001B8                 ENDP
-  694 000001B8         
+  690 000001B2 21AC            MOVS             R1, #UART0_C2_TI_RI
+  691 000001B4 70C1            STRB             R1, [R0, #UART0_C2_OFFSET] ; enable Tx interrupt
+  692 000001B6         
+  693 000001B6 BD03            POP              {R0-R1, PC}
+  694 000001B8                 ENDP
   695 000001B8         
-  696 000001B8         ;****************************************************************
-  697 000001B8         ;  PutStringSB
-  698 000001B8         ;
-  699 000001B8         ;  Displays a null terminated string from memory,
-  700 000001B8         ;  starting at the address where R0 points, to the
-  701 000001B8         ;  terminal screen.
-  702 000001B8         ;
-  703 000001B8         ;  Parameters
-  704 000001B8         ;  Input:
-  705 000001B8         ;  R0: Pointer to source string
-  706 000001B8         ;  R1: Buffer capacity
-  707 000001B8         ;
-  708 000001B8         ;  Modify:
-  709 000001B8         ;  APSR
-  710 000001B8         ;
-  711 000001B8         ;  Uses:
-  712 000001B8         ;  PutChar
-  713 000001B8         ;****************************************************************
-  714 000001B8         PutStringSB
+  696 000001B8         
+  697 000001B8         ;****************************************************************
+  698 000001B8         ;  PutStringSB
+  699 000001B8         ;
+  700 000001B8         ;  Displays a null terminated string from memory,
+  701 000001B8         ;  starting at the address where R0 points, to the
+  702 000001B8         ;  terminal screen.
+  703 000001B8         ;
+  704 000001B8         ;  Parameters
+  705 000001B8         ;  Input:
+  706 000001B8         ;  R0: Pointer to source string
+  707 000001B8         ;  R1: Buffer capacity
+  708 000001B8         ;
+  709 000001B8         ;  Modify:
+  710 000001B8         ;  APSR
+  711 000001B8         ;
+  712 000001B8         ;  Uses:
+  713 000001B8         ;  PutChar
+  714 000001B8         ;****************************************************************
+  715 000001B8         PutStringSB
                                PROC             {R0-R14}
-  715 000001B8 B500            PUSH             {LR}
-  716 000001BA B407            PUSH             {R0-R2}
-  717 000001BC         
-  718 000001BC 0002            MOVS             R2,R0       ; move address to R2
-  719 000001BE 7810    PutLoop LDRB             R0,[R2,#0]  ; load byte of string
-  720 000001C0 2800            CMP              R0,#NULL    ; if character is null,
-  721 000001C2 D004            BEQ              StringEnd   ; the string has terminated
-  722 000001C4 F7FF FFFE       BL               PutChar     ; print character to terminal
-  723 000001C8 1C52            ADDS             R2,R2,#1    ; increment address
-  724 000001CA 1E49            SUBS             R1,R1,#1    ; decrement buffer capacity
-  725 000001CC D1F7            BNE              PutLoop     ; loop back until buffer is empty
-  726 000001CE         
-  727 000001CE BC07    StringEnd
+  716 000001B8 B500            PUSH             {LR}
+  717 000001BA B407            PUSH             {R0-R2}
+  718 000001BC         
+  719 000001BC 0002            MOVS             R2,R0       ; move address to R2
+  720 000001BE 7810    PutLoop LDRB             R0,[R2,#0]  ; load byte of string
+  721 000001C0 2800            CMP              R0,#NULL    ; if character is null,
+  722 000001C2 D004            BEQ              StringEnd   ; the string has terminated
+  723 000001C4 F7FF FFFE       BL               PutChar     ; print character to terminal
+  724 000001C8 1C52            ADDS             R2,R2,#1    ; increment address
+  725 000001CA 1E49            SUBS             R1,R1,#1    ; decrement buffer capacity
+  726 000001CC D1F7            BNE              PutLoop     ; loop back until buffer is empty
+  727 000001CE         
+  728 000001CE BC07    StringEnd
                                POP              {R0-R2}
-  728 000001D0 BD00            POP              {PC}
-  729 000001D2                 ENDP
+  729 000001D0 BD00            POP              {PC}
 
 
 
 ARM Macro Assembler    Page 21 Embedded LED Game Functions and Drivers
 
 
-  730 000001D2         
-  731 000001D2         ;****************************************************************
-  732 000001D2         ;  InitQueue
-  733 000001D2         ;
-  734 000001D2         ;  Initialize queue record structure
-  735 000001D2         ;  
-  736 000001D2         ;  Parameters
-  737 000001D2         ;  Input:
-  738 000001D2         ;  R0: pointer for empty queue buffer 
-  739 000001D2         ;  R1: pointer for new queue record structure
-  740 000001D2         ;  R2: queue size
-  741 000001D2         ;
-  742 000001D2         ;  Modify:
-  743 000001D2         ;  APSR
-  744 000001D2         ;****************************************************************
-  745 000001D2         InitQueue
+  730 000001D2                 ENDP
+  731 000001D2         
+  732 000001D2         ;****************************************************************
+  733 000001D2         ;  InitQueue
+  734 000001D2         ;
+  735 000001D2         ;  Initialize queue record structure
+  736 000001D2         ;  
+  737 000001D2         ;  Parameters
+  738 000001D2         ;  Input:
+  739 000001D2         ;  R0: pointer for empty queue buffer 
+  740 000001D2         ;  R1: pointer for new queue record structure
+  741 000001D2         ;  R2: queue size
+  742 000001D2         ;
+  743 000001D2         ;  Modify:
+  744 000001D2         ;  APSR
+  745 000001D2         ;****************************************************************
+  746 000001D2         InitQueue
                                PROC             {R0-R14}
-  746 000001D2 B40E            PUSH             {R1-R3}
-  747 000001D4         
-  748 000001D4 C101            STM              R1!, {R0}   ; save to IN_PTR, increment address
-  749 000001D6 C101            STM              R1!, {R0}   ; save to OUT_PTR, increment
-  750 000001D8 C101            STM              R1!, {R0}   ; save to BUF_STRT, increment
-  751 000001DA 1883            ADDS             R3, R0, R2  ; save queue past address to R3
-  752 000001DC C108            STM              R1!, {R3}   ; save to BUF_PAST
-  753 000001DE 700A            STRB             R2, [R1,#0] ; save size to BUF_SIZE
-  754 000001E0 2300            MOVS             R3, #NULL
-  755 000001E2 704B            STRB             R3, [R1,#1] ; save null to NUM_ENQD
-  756 000001E4         
-  757 000001E4 BC0E            POP              {R1-R3}
-  758 000001E6 4770            BX               LR
-  759 000001E8                 ENDP
-  760 000001E8         
-  761 000001E8         ;****************************************************************
-  762 000001E8         ;  Dequeue
-  763 000001E8         ;
-  764 000001E8         ;  Attempts to get a queue from the record.
-  765 000001E8         ;  
-  766 000001E8         ;  Parameters
-  767 000001E8         ;  Input:
-  768 000001E8         ;  R1: pointer for queue record structure
-  769 000001E8         ;
-  770 000001E8         ;  Output:
+  747 000001D2 B40E            PUSH             {R1-R3}
+  748 000001D4         
+  749 000001D4 C101            STM              R1!, {R0}   ; save to IN_PTR, increment address
+  750 000001D6 C101            STM              R1!, {R0}   ; save to OUT_PTR, increment
+  751 000001D8 C101            STM              R1!, {R0}   ; save to BUF_STRT, increment
+  752 000001DA 1883            ADDS             R3, R0, R2  ; save queue past address to R3
+  753 000001DC C108            STM              R1!, {R3}   ; save to BUF_PAST
+  754 000001DE 700A            STRB             R2, [R1,#0] ; save size to BUF_SIZE
+  755 000001E0 2300            MOVS             R3, #NULL
+  756 000001E2 704B            STRB             R3, [R1,#1] ; save null to NUM_ENQD
+  757 000001E4         
+  758 000001E4 BC0E            POP              {R1-R3}
+  759 000001E6 4770            BX               LR
+  760 000001E8                 ENDP
+  761 000001E8         
+  762 000001E8         ;****************************************************************
+  763 000001E8         ;  Dequeue
+  764 000001E8         ;
+  765 000001E8         ;  Attempts to get a queue from the record.
+  766 000001E8         ;  
+  767 000001E8         ;  Parameters
+  768 000001E8         ;  Input:
+  769 000001E8         ;  R1: pointer for queue record structure
+  770 000001E8         ;
 
 
 
 ARM Macro Assembler    Page 22 Embedded LED Game Functions and Drivers
 
 
-  771 000001E8         ;  R0: contains the successfully dequeued character
-  772 000001E8         ;  PSR C Flag: 0 on success, 1 on failure 
-  773 000001E8         ;
-  774 000001E8         ;  Modify:
-  775 000001E8         ;  APSR
-  776 000001E8         ;  R0
-  777 000001E8         ;****************************************************************
-  778 000001E8         Dequeue PROC             {R1-R14}
-  779 000001E8 B41E            PUSH             {R1-R4}
-  780 000001EA         
-  781 000001EA 7C4A            LDRB             R2, [R1, #NUM_ENQD] ; R2 is NUM_ENQD value
-  782 000001EC 2A00            CMP              R2, #0
-  783 000001EE D011            BEQ              EmptyQueue  ; if 0, branch to set carry
-  784 000001F0         
-  785 000001F0 684B            LDR              R3, [R1, #OUT_PTR] ; R3 is pointer to queue out addr
-  786 000001F2 7818            LDRB             R0, [R3, #0] ; put character stored at maddr R3 in R0
-  787 000001F4         
-  788 000001F4 1C5B            ADDS             R3, R3, #1  ; increment OUT_PTR address
-  789 000001F6 68CC            LDR              R4, [R1, #BUF_PAST] ; R4 is BUF_PAST stored address
-  790 000001F8 42A3            CMP              R3, R4
-  791 000001FA D100            BNE              SaveOutPtr  ; skip next line if OUT_PTR still within queue limit
-  792 000001FC 688B            LDR              R3, [R1, #BUF_STRT] ; set R3 to BUF_STRT addr
-  793 000001FE 604B    SaveOutPtr
+  771 000001E8         ;  Output:
+  772 000001E8         ;  R0: contains the successfully dequeued character
+  773 000001E8         ;  PSR C Flag: 0 on success, 1 on failure 
+  774 000001E8         ;
+  775 000001E8         ;  Modify:
+  776 000001E8         ;  APSR
+  777 000001E8         ;  R0
+  778 000001E8         ;****************************************************************
+  779 000001E8         Dequeue PROC             {R1-R14}
+  780 000001E8 B41E            PUSH             {R1-R4}
+  781 000001EA         
+  782 000001EA 7C4A            LDRB             R2, [R1, #NUM_ENQD] ; R2 is NUM_ENQD value
+  783 000001EC 2A00            CMP              R2, #0
+  784 000001EE D011            BEQ              EmptyQueue  ; if 0, branch to set carry
+  785 000001F0         
+  786 000001F0 684B            LDR              R3, [R1, #OUT_PTR] ; R3 is pointer to queue out addr
+  787 000001F2 7818            LDRB             R0, [R3, #0] ; put character stored at maddr R3 in R0
+  788 000001F4         
+  789 000001F4 1C5B            ADDS             R3, R3, #1  ; increment OUT_PTR address
+  790 000001F6 68CC            LDR              R4, [R1, #BUF_PAST] ; R4 is BUF_PAST stored address
+  791 000001F8 42A3            CMP              R3, R4
+  792 000001FA D100            BNE              SaveOutPtr  ; skip next line if OUT_PTR still within queue limit
+  793 000001FC 688B            LDR              R3, [R1, #BUF_STRT] ; set R3 to BUF_STRT addr
+  794 000001FE 604B    SaveOutPtr
                                STR              R3, [R1, #OUT_PTR] ; store adjusted out pointer addr to OUT_PTR
-  794 00000200 1E52            SUBS             R2, R2, #1  ; decrement NUM_ENQD
-  795 00000202 744A            STRB             R2, [R1, #NUM_ENQD] ; store new NUM_ENQD
-  796 00000204         
-  797 00000204 F3EF 8300       MRS              R3, APSR    ; move APSR to R3
-  798 00000208 22DF            MOVS             R2, #0xDF
-  799 0000020A 0612            LSLS             R2, #24     ; set AND mask
-  800 0000020C 4013            ANDS             R3, R3, R2  ; clear C flag in APSR
-  801 0000020E F383 8800       MSR              APSR, R3    ; set APSR back
-  802 00000212 E006            B                Done
-  803 00000214         
-  804 00000214 F3EF 8300 
+  795 00000200 1E52            SUBS             R2, R2, #1  ; decrement NUM_ENQD
+  796 00000202 744A            STRB             R2, [R1, #NUM_ENQD] ; store new NUM_ENQD
+  797 00000204         
+  798 00000204 F3EF 8300       MRS              R3, APSR    ; move APSR to R3
+  799 00000208 22DF            MOVS             R2, #0xDF
+  800 0000020A 0612            LSLS             R2, #24     ; set AND mask
+  801 0000020C 4013            ANDS             R3, R3, R2  ; clear C flag in APSR
+  802 0000020E F383 8800       MSR              APSR, R3    ; set APSR back
+  803 00000212 E006            B                Done
+  804 00000214         
+  805 00000214 F3EF 8300 
                        EmptyQueue
                                MRS              R3, APSR    ; move APSR to R3
-  805 00000218 2220            MOVS             R2, #0x20
-  806 0000021A 0612            LSLS             R2, #24     ; set AND mask
-  807 0000021C 4313            ORRS             R3, R3, R2  ; set C flag in APSR
-  808 0000021E F383 8800       MSR              APSR, R3    ; set APSR back
-  809 00000222         
+  806 00000218 2220            MOVS             R2, #0x20
+  807 0000021A 0612            LSLS             R2, #24     ; set AND mask
+  808 0000021C 4313            ORRS             R3, R3, R2  ; set C flag in APSR
+  809 0000021E F383 8800       MSR              APSR, R3    ; set APSR back
 
 
 
 ARM Macro Assembler    Page 23 Embedded LED Game Functions and Drivers
 
 
-  810 00000222 BC1E    Done    POP              {R1-R4}
-  811 00000224 4770            BX               LR
-  812 00000226                 ENDP
-  813 00000226         
+  810 00000222         
+  811 00000222 BC1E    Done    POP              {R1-R4}
+  812 00000224 4770            BX               LR
+  813 00000226                 ENDP
   814 00000226         
-  815 00000226         ;****************************************************************
-  816 00000226         ;  Enqueue
-  817 00000226         ;
-  818 00000226         ;  Attempts to insert a new character into the queue.
-  819 00000226         ;  
-  820 00000226         ;  Parameters
-  821 00000226         ;  Input:
-  822 00000226         ;  R0: character byte to enqueue
-  823 00000226         ;  R1: pointer for queue record structure
-  824 00000226         ;
-  825 00000226         ;  Output:
-  826 00000226         ;  PSR C Flag: 0 on success, 1 on failure 
-  827 00000226         ;
-  828 00000226         ;  Modify:
-  829 00000226         ;  APSR
-  830 00000226         ;****************************************************************
-  831 00000226         Enqueue PROC             {R1-R14}
-  832 00000226 B41F            PUSH             {R0-R4}
-  833 00000228         
-  834 00000228 7C4A            LDRB             R2, [R1, #NUM_ENQD] ; R2 is NUM_ENQD value
-  835 0000022A 7C0B            LDRB             R3, [R1, #BUF_SIZE] ; R3 is BUF_SIZE
-  836 0000022C 429A            CMP              R2, R3
-  837 0000022E DA11            BGE              QueueFull   ; if 0, branch to set carry
-  838 00000230         
-  839 00000230 680B            LDR              R3, [R1, #IN_PTR] ; R3 is pointer to queue in addr
-  840 00000232 7018            STRB             R0, [R3, #0] ; enqueue value stored in R0
-  841 00000234         
-  842 00000234 1C5B            ADDS             R3, R3, #1  ; increment IN_PTR address
-  843 00000236 68CC            LDR              R4, [R1, #BUF_PAST] ; R4 is BUF_PAST stored address
-  844 00000238 42A3            CMP              R3, R4
-  845 0000023A D100            BNE              SaveInPtr   ; Skip next line if IN_PTR still within queue buffer
-  846 0000023C 688B            LDR              R3, [R1, #BUF_STRT] ; set R3 to BUF_STRT addr
-  847 0000023E 600B    SaveInPtr
+  815 00000226         
+  816 00000226         ;****************************************************************
+  817 00000226         ;  Enqueue
+  818 00000226         ;
+  819 00000226         ;  Attempts to insert a new character into the queue.
+  820 00000226         ;  
+  821 00000226         ;  Parameters
+  822 00000226         ;  Input:
+  823 00000226         ;  R0: character byte to enqueue
+  824 00000226         ;  R1: pointer for queue record structure
+  825 00000226         ;
+  826 00000226         ;  Output:
+  827 00000226         ;  PSR C Flag: 0 on success, 1 on failure 
+  828 00000226         ;
+  829 00000226         ;  Modify:
+  830 00000226         ;  APSR
+  831 00000226         ;****************************************************************
+  832 00000226         Enqueue PROC             {R1-R14}
+  833 00000226 B41F            PUSH             {R0-R4}
+  834 00000228         
+  835 00000228 7C4A            LDRB             R2, [R1, #NUM_ENQD] ; R2 is NUM_ENQD value
+  836 0000022A 7C0B            LDRB             R3, [R1, #BUF_SIZE] ; R3 is BUF_SIZE
+  837 0000022C 429A            CMP              R2, R3
+  838 0000022E DA11            BGE              QueueFull   ; if 0, branch to set carry
+  839 00000230         
+  840 00000230 680B            LDR              R3, [R1, #IN_PTR] ; R3 is pointer to queue in addr
+  841 00000232 7018            STRB             R0, [R3, #0] ; enqueue value stored in R0
+  842 00000234         
+  843 00000234 1C5B            ADDS             R3, R3, #1  ; increment IN_PTR address
+  844 00000236 68CC            LDR              R4, [R1, #BUF_PAST] ; R4 is BUF_PAST stored address
+  845 00000238 42A3            CMP              R3, R4
+  846 0000023A D100            BNE              SaveInPtr   ; Skip next line if IN_PTR still within queue buffer
+  847 0000023C 688B            LDR              R3, [R1, #BUF_STRT] ; set R3 to BUF_STRT addr
+  848 0000023E 600B    SaveInPtr
                                STR              R3, [R1, #IN_PTR] ; store adjusted in pointer addr to IN_PTR
-  848 00000240 1C52            ADDS             R2, R2, #1  ; increment NUM_ENQD
-  849 00000242 744A            STRB             R2, [R1, #NUM_ENQD] ; store new NUM_ENQD
-  850 00000244         
+  849 00000240 1C52            ADDS             R2, R2, #1  ; increment NUM_ENQD
+  850 00000242 744A            STRB             R2, [R1, #NUM_ENQD] ; store new NUM_ENQD
 
 
 
 ARM Macro Assembler    Page 24 Embedded LED Game Functions and Drivers
 
 
-  851 00000244 F3EF 8300       MRS              R3, APSR    ; move APSR to R3
-  852 00000248 22DF            MOVS             R2, #0xDF
-  853 0000024A 0612            LSLS             R2, #24     ; set AND mask
-  854 0000024C 4013            ANDS             R3, R3, R2  ; clear C flag in APSR
-  855 0000024E F383 8800       MSR              APSR, R3    ; set APSR back
-  856 00000252 E006            B                Finish
-  857 00000254         
-  858 00000254 F3EF 8300 
+  851 00000244         
+  852 00000244 F3EF 8300       MRS              R3, APSR    ; move APSR to R3
+  853 00000248 22DF            MOVS             R2, #0xDF
+  854 0000024A 0612            LSLS             R2, #24     ; set AND mask
+  855 0000024C 4013            ANDS             R3, R3, R2  ; clear C flag in APSR
+  856 0000024E F383 8800       MSR              APSR, R3    ; set APSR back
+  857 00000252 E006            B                Finish
+  858 00000254         
+  859 00000254 F3EF 8300 
                        QueueFull
                                MRS              R3, APSR    ; move APSR to R3
-  859 00000258 2220            MOVS             R2, #0x20
-  860 0000025A 0612            LSLS             R2, #24     ; set AND mask
-  861 0000025C 4313            ORRS             R3, R3, R2  ; set C flag in APSR
-  862 0000025E F383 8800       MSR              APSR, R3    ; set APSR back
-  863 00000262         
-  864 00000262 BC1F    Finish  POP              {R0-R4}
-  865 00000264 4770            BX               LR
-  866 00000266                 ENDP
-  867 00000266         
+  860 00000258 2220            MOVS             R2, #0x20
+  861 0000025A 0612            LSLS             R2, #24     ; set AND mask
+  862 0000025C 4313            ORRS             R3, R3, R2  ; set C flag in APSR
+  863 0000025E F383 8800       MSR              APSR, R3    ; set APSR back
+  864 00000262         
+  865 00000262 BC1F    Finish  POP              {R0-R4}
+  866 00000264 4770            BX               LR
+  867 00000266                 ENDP
   868 00000266         
-  869 00000266         ;****************************************************************
-  870 00000266         ;  PutNumHex
-  871 00000266         ;
-  872 00000266         ;  Prints to the terminal screen the text
-  873 00000266         ;  hexadecimal representation of the unsigned word in R0
-  874 00000266         ;  
-  875 00000266         ;  Parameters
-  876 00000266         ;  Input:
-  877 00000266         ;  R0: Unsigned number in hexadecimal
-  878 00000266         ;
-  879 00000266         ;  Modify:
-  880 00000266         ;  APSR
-  881 00000266         ;  
-  882 00000266         ;  Uses:
-  883 00000266         ;  PutChar
-  884 00000266         ;****************************************************************
-  885 00000266         PutNumHex
+  869 00000266         
+  870 00000266         ;****************************************************************
+  871 00000266         ;  PutNumHex
+  872 00000266         ;
+  873 00000266         ;  Prints to the terminal screen the text
+  874 00000266         ;  hexadecimal representation of the unsigned word in R0
+  875 00000266         ;  
+  876 00000266         ;  Parameters
+  877 00000266         ;  Input:
+  878 00000266         ;  R0: Unsigned number in hexadecimal
+  879 00000266         ;
+  880 00000266         ;  Modify:
+  881 00000266         ;  APSR
+  882 00000266         ;  
+  883 00000266         ;  Uses:
+  884 00000266         ;  PutChar
+  885 00000266         ;****************************************************************
+  886 00000266         PutNumHex
                                PROC             {R0-R14}
-  886 00000266 B50F            PUSH             {R0-R3, LR}
-  887 00000268         
-  888 00000268 220F            MOVS             R2, #0x0F   ; init mask in R2
-  889 0000026A 2300            MOVS             R3, #0      ; init counter
+  887 00000266 B50F            PUSH             {R0-R3, LR}
+  888 00000268         
+  889 00000268 220F            MOVS             R2, #0x0F   ; init mask in R2
 
 
 
 ARM Macro Assembler    Page 25 Embedded LED Game Functions and Drivers
 
 
-  890 0000026C 2B08    Loop    CMP              R3, #8      ; compare counter to limit, 8
-  891 0000026E D009            BEQ              PrintOut    ; Branch to print chars if limit reached
-  892 00000270 0001            MOVS             R1, R0      ; move R0 to R1 for ANDS
-  893 00000272 4011            ANDS             R1, R1, R2  ; put 4 MSBs in R1
-  894 00000274 3130            ADDS             R1, R1, #0x30 ; Add 0x30 to put in number range
-  895 00000276 2939            CMP              R1, #0x39   ; Check if value in number or letter range
-  896 00000278 DD00            BLE              Number      ; if < 0, skip the next line
-  897 0000027A 1DC9            ADDS             R1, R1, #0x07 ; if > 0, is letter, put character into letter range
-  898 0000027C B402    Number  PUSH             {R1}        ; push to stack
-  899 0000027E         
-  900 0000027E 0900            LSRS             R0, R0, #4  ; shift number over for next 4 MSBs
-  901 00000280 1C5B            ADDS             R3, R3, #1  ; increment counter
-  902 00000282 E7F3            B                Loop
-  903 00000284         
-  904 00000284 BC01    PrintOut
+  890 0000026A 2300            MOVS             R3, #0      ; init counter
+  891 0000026C 2B08    Loop    CMP              R3, #8      ; compare counter to limit, 8
+  892 0000026E D009            BEQ              PrintOut    ; Branch to print chars if limit reached
+  893 00000270 0001            MOVS             R1, R0      ; move R0 to R1 for ANDS
+  894 00000272 4011            ANDS             R1, R1, R2  ; put 4 MSBs in R1
+  895 00000274 3130            ADDS             R1, R1, #0x30 ; Add 0x30 to put in number range
+  896 00000276 2939            CMP              R1, #0x39   ; Check if value in number or letter range
+  897 00000278 DD00            BLE              Number      ; if < 0, skip the next line
+  898 0000027A 1DC9            ADDS             R1, R1, #0x07 ; if > 0, is letter, put character into letter range
+  899 0000027C B402    Number  PUSH             {R1}        ; push to stack
+  900 0000027E         
+  901 0000027E 0900            LSRS             R0, R0, #4  ; shift number over for next 4 MSBs
+  902 00000280 1C5B            ADDS             R3, R3, #1  ; increment counter
+  903 00000282 E7F3            B                Loop
+  904 00000284         
+  905 00000284 BC01    PrintOut
                                POP              {R0}
-  905 00000286 F7FF FFFE       BL               PutChar     ; print the value   
-  906 0000028A 1E5B            SUBS             R3, R3, #1  ; increment counter
-  907 0000028C D1FA            BNE              PrintOut
-  908 0000028E         
-  909 0000028E BD0F    RestoreRegs
+  906 00000286 F7FF FFFE       BL               PutChar     ; print the value   
+  907 0000028A 1E5B            SUBS             R3, R3, #1  ; increment counter
+  908 0000028C D1FA            BNE              PrintOut
+  909 0000028E         
+  910 0000028E BD0F    RestoreRegs
                                POP              {R0-R3, PC}
-  910 00000290                 ENDP
-  911 00000290         
+  911 00000290                 ENDP
   912 00000290         
-  913 00000290         ;****************************************************************
-  914 00000290         ;  PutNumUB
-  915 00000290         ;
-  916 00000290         ;  Prints to the terminal screen the text
-  917 00000290         ;  decimal representation of the unsigned byte in R0
-  918 00000290         ;  
-  919 00000290         ;  Parameters
-  920 00000290         ;  Input:
-  921 00000290         ;  R0: Unsigned number in hexadecimal
-  922 00000290         ;
-  923 00000290         ;  Modify:
-  924 00000290         ;  APSR
-  925 00000290         ;  
-  926 00000290         ;  Uses:
-  927 00000290         ;  PutNumU
-  928 00000290         ;****************************************************************
-  929 00000290         PutNumUB
+  913 00000290         
+  914 00000290         ;****************************************************************
+  915 00000290         ;  PutNumUB
+  916 00000290         ;
+  917 00000290         ;  Prints to the terminal screen the text
+  918 00000290         ;  decimal representation of the unsigned byte in R0
+  919 00000290         ;  
+  920 00000290         ;  Parameters
+  921 00000290         ;  Input:
+  922 00000290         ;  R0: Unsigned number in hexadecimal
+  923 00000290         ;
+  924 00000290         ;  Modify:
+  925 00000290         ;  APSR
+  926 00000290         ;  
+  927 00000290         ;  Uses:
+  928 00000290         ;  PutNumU
+  929 00000290         ;****************************************************************
 
 
 
 ARM Macro Assembler    Page 26 Embedded LED Game Functions and Drivers
 
 
+  930 00000290         PutNumUB
                                PROC             {R0-R14}
-  930 00000290 B503            PUSH             {R0-R1, LR}
-  931 00000292         
-  932 00000292 21FF            MOVS             R1, #0xFF
-  933 00000294 4008            ANDS             R0, R0, R1
-  934 00000296 F7FF FFFE       BL               PutNumU
-  935 0000029A         
-  936 0000029A BD03            POP              {R0-R1, PC}
-  937 0000029C                 ENDP
-  938 0000029C         
+  931 00000290 B503            PUSH             {R0-R1, LR}
+  932 00000292         
+  933 00000292 21FF            MOVS             R1, #0xFF
+  934 00000294 4008            ANDS             R0, R0, R1
+  935 00000296 F7FF FFFE       BL               PutNumU
+  936 0000029A         
+  937 0000029A BD03            POP              {R0-R1, PC}
+  938 0000029C                 ENDP
   939 0000029C         
-  940 0000029C         ;****************************************************************
-  941 0000029C         ;  PutNumU
-  942 0000029C         ;
-  943 0000029C         ;  Prints to the terminal screen the text
-  944 0000029C         ;  decimal representation of the number in R0
-  945 0000029C         ;  
-  946 0000029C         ;  Parameters
-  947 0000029C         ;  Input:
-  948 0000029C         ;  R0: Unsigned number in hexadecimal
-  949 0000029C         ;
-  950 0000029C         ;  Modify:
-  951 0000029C         ;  APSR
-  952 0000029C         ;  
-  953 0000029C         ;  Uses:
-  954 0000029C         ;  PutChar
-  955 0000029C         ;  DivU
-  956 0000029C         ;****************************************************************
-  957 0000029C         PutNumU PROC             {R0-R14}
-  958 0000029C B500            PUSH             {LR}
-  959 0000029E B40F            PUSH             {R0-R3}
-  960 000002A0         
-  961 000002A0 2300            MOVS             R3,#0       ; init counter
-  962 000002A2 0001    DivTen  MOVS             R1,R0       ; move R0 to R1 
-  963 000002A4 200A            MOVS             R0,#0x0A    ; put 10 in R0
-  964 000002A6 F7FF FFFE       BL               DIVU        ; R0 holds quotient, R1 holds remainder
-  965 000002AA 3130            ADDS             R1,R1,#0x30 ; put number into ascii range
-  966 000002AC B402            PUSH             {R1}        ; push remainder onto stack
-  967 000002AE 1C5B            ADDS             R3,R3,#1    ; increment counter
-  968 000002B0 2800            CMP              R0,#0
-  969 000002B2 D000            BEQ              PrintNum    ; when quotient = 0, str is fully converted
-  970 000002B4 E7F5            B                DivTen
+  940 0000029C         
+  941 0000029C         ;****************************************************************
+  942 0000029C         ;  PutNumU
+  943 0000029C         ;
+  944 0000029C         ;  Prints to the terminal screen the text
+  945 0000029C         ;  decimal representation of the number in R0
+  946 0000029C         ;  
+  947 0000029C         ;  Parameters
+  948 0000029C         ;  Input:
+  949 0000029C         ;  R0: Unsigned number in hexadecimal
+  950 0000029C         ;
+  951 0000029C         ;  Modify:
+  952 0000029C         ;  APSR
+  953 0000029C         ;  
+  954 0000029C         ;  Uses:
+  955 0000029C         ;  PutChar
+  956 0000029C         ;  DivU
+  957 0000029C         ;****************************************************************
+  958 0000029C         PutNumU PROC             {R0-R14}
+  959 0000029C B500            PUSH             {LR}
+  960 0000029E B40F            PUSH             {R0-R3}
+  961 000002A0         
+  962 000002A0 2300            MOVS             R3,#0       ; init counter
+  963 000002A2 0001    DivTen  MOVS             R1,R0       ; move R0 to R1 
+  964 000002A4 200A            MOVS             R0,#0x0A    ; put 10 in R0
+  965 000002A6 F7FF FFFE       BL               DIVU        ; R0 holds quotient, R1 holds remainder
+  966 000002AA 3130            ADDS             R1,R1,#0x30 ; put number into ascii range
+  967 000002AC B402            PUSH             {R1}        ; push remainder onto stack
+  968 000002AE 1C5B            ADDS             R3,R3,#1    ; increment counter
+  969 000002B0 2800            CMP              R0,#0
+  970 000002B2 D000            BEQ              PrintNum    ; when quotient = 0, str is fully converted
 
 
 
 ARM Macro Assembler    Page 27 Embedded LED Game Functions and Drivers
 
 
-  971 000002B6         
-  972 000002B6 BC01    PrintNum
+  971 000002B4 E7F5            B                DivTen
+  972 000002B6         
+  973 000002B6 BC01    PrintNum
                                POP              {R0}        ; pop the latest remainder into R0
-  973 000002B8 F7FF FFFE       BL               PutChar     ; send to terminal
-  974 000002BC 1E5B            SUBS             R3,R3,#1    ; subtract counter
-  975 000002BE D1FA            BNE              PrintNum    ; loop until counter = 0
-  976 000002C0         
-  977 000002C0 BC0F            POP              {R0-R3}
-  978 000002C2 BD00            POP              {PC}
-  979 000002C4                 ENDP
-  980 000002C4         
+  974 000002B8 F7FF FFFE       BL               PutChar     ; send to terminal
+  975 000002BC 1E5B            SUBS             R3,R3,#1    ; subtract counter
+  976 000002BE D1FA            BNE              PrintNum    ; loop until counter = 0
+  977 000002C0         
+  978 000002C0 BC0F            POP              {R0-R3}
+  979 000002C2 BD00            POP              {PC}
+  980 000002C4                 ENDP
   981 000002C4         
-  982 000002C4         ;---------------------------------------------------------------
-  983 000002C4         ; DIVISION SUBROUTINE
-  984 000002C4         ;  input:  R0 = Divisor
-  985 000002C4         ;      R1 = Dividend
-  986 000002C4         ;  operation: R1/R0
-  987 000002C4         ;  returns: R0 = Quotient
-  988 000002C4         ;     R1 = Remainder
-  989 000002C4         ;---------------------------------------------------------------
-  990 000002C4         
-  991 000002C4         DIVU    PROC             {R2-R14},{}
-  992 000002C4 B40C            PUSH             {R2-R3}
-  993 000002C6         
-  994 000002C6 2220            MOVS             R2, #0x20   ; Store mask in R2
-  995 000002C8 0612            LSLS             R2, #24     ; Left shift to mask 2nd MSB (carry)
-  996 000002CA F3EF 8300       MRS              R3, APSR    ; Move APSR to R3
-  997 000002CE 431A            ORRS             R2, R2, R3  ; Or APSR to set C
-  998 000002D0 F382 8800       MSR              APSR, R2    ; Set APSR back 
-  999 000002D4         
- 1000 000002D4 2800            CMP              R0, #0      ; if R0 is 0
- 1001 000002D6 D00B            BEQ              Div0        ; Jump to divide by 0
- 1002 000002D8         
- 1003 000002D8 2200            MOVS             R2, #0
- 1004 000002DA 4281    DivL    CMP              R1, R0      ; while R1 > R0
- 1005 000002DC D302            BLO              DivF
- 1006 000002DE 1A09            SUBS             R1, R1, R0  ; R1 = R1 - R0
- 1007 000002E0 1C52            ADDS             R2, R2, #1  ; Add 1 to remainder
- 1008 000002E2 E7FA            B                DivL
- 1009 000002E4         
- 1010 000002E4 F3EF 8300 
-                       DivF    MRS              R3, APSR    ; Move APSR to R3
+  982 000002C4         
+  983 000002C4         ;---------------------------------------------------------------
+  984 000002C4         ; DIVISION SUBROUTINE
+  985 000002C4         ;  input:  R0 = Divisor
+  986 000002C4         ;      R1 = Dividend
+  987 000002C4         ;  operation: R1/R0
+  988 000002C4         ;  returns: R0 = Quotient
+  989 000002C4         ;     R1 = Remainder
+  990 000002C4         ;---------------------------------------------------------------
+  991 000002C4         
+  992 000002C4         DIVU    PROC             {R2-R14},{}
+  993 000002C4 B40C            PUSH             {R2-R3}
+  994 000002C6         
+  995 000002C6 2220            MOVS             R2, #0x20   ; Store mask in R2
+  996 000002C8 0612            LSLS             R2, #24     ; Left shift to mask 2nd MSB (carry)
+  997 000002CA F3EF 8300       MRS              R3, APSR    ; Move APSR to R3
+  998 000002CE 431A            ORRS             R2, R2, R3  ; Or APSR to set C
+  999 000002D0 F382 8800       MSR              APSR, R2    ; Set APSR back 
+ 1000 000002D4         
+ 1001 000002D4 2800            CMP              R0, #0      ; if R0 is 0
+ 1002 000002D6 D00B            BEQ              Div0        ; Jump to divide by 0
+ 1003 000002D8         
+ 1004 000002D8 2200            MOVS             R2, #0
+ 1005 000002DA 4281    DivL    CMP              R1, R0      ; while R1 > R0
+ 1006 000002DC D302            BLO              DivF
+ 1007 000002DE 1A09            SUBS             R1, R1, R0  ; R1 = R1 - R0
+ 1008 000002E0 1C52            ADDS             R2, R2, #1  ; Add 1 to remainder
+ 1009 000002E2 E7FA            B                DivL
+ 1010 000002E4         
+ 1011 000002E4 F3EF 8300 
 
 
 
 ARM Macro Assembler    Page 28 Embedded LED Game Functions and Drivers
 
 
- 1011 000002E8 4393            BICS             R3, R3, R2  ; Clear carry
- 1012 000002EA F383 8800       MSR              APSR, R3    ; Move APSR back
- 1013 000002EE E000            B                Fin         ; Skip Div0
- 1014 000002F0         
- 1015 000002F0 2200    Div0    MOVS             R2, #0      ; Clear mask in R2
- 1016 000002F2         
- 1017 000002F2 0010    Fin     MOVS             R0, R2      ; Move quotient to R0
- 1018 000002F4 BC0C            POP              {R2-R3}     ; Pop stored stack registers
- 1019 000002F6 4770            BX               LR          ; Return
- 1020 000002F8                 ENDP
- 1021 000002F8         
- 1022 000002F8         ;>>>>>   end subroutine code <<<<<
- 1023 000002F8                 ALIGN
- 1024 000002F8         
- 1025 000002F8         ;****************************************************************
- 1026 000002F8         ;Constants
- 1027 000002F8 00000000 
+                       DivF    MRS              R3, APSR    ; Move APSR to R3
+ 1012 000002E8 4393            BICS             R3, R3, R2  ; Clear carry
+ 1013 000002EA F383 8800       MSR              APSR, R3    ; Move APSR back
+ 1014 000002EE E000            B                Fin         ; Skip Div0
+ 1015 000002F0         
+ 1016 000002F0 2200    Div0    MOVS             R2, #0      ; Clear mask in R2
+ 1017 000002F2         
+ 1018 000002F2 0010    Fin     MOVS             R0, R2      ; Move quotient to R0
+ 1019 000002F4 BC0C            POP              {R2-R3}     ; Pop stored stack registers
+ 1020 000002F6 4770            BX               LR          ; Return
+ 1021 000002F8                 ENDP
+ 1022 000002F8         
+ 1023 000002F8         ;>>>>>   end subroutine code <<<<<
+ 1024 000002F8                 ALIGN
+ 1025 000002F8         
+ 1026 000002F8         ;****************************************************************
+ 1027 000002F8         ;Constants
+ 1028 000002F8 00000000 
               00000000 
               40048038 
               00003000 
@@ -1341,13 +1342,13 @@ ARM Macro Assembler    Page 28 Embedded LED Game Functions and Drivers
               00000000 
               00000000 
               00000000 
-              00000000 
 
 
 
 ARM Macro Assembler    Page 29 Embedded LED Game Functions and Drivers
 
 
+              00000000 
               00000000 
               00000000 
               40048004 
@@ -1370,62 +1371,62 @@ ARM Macro Assembler    Page 29 Embedded LED Game Functions and Drivers
               00000000 
               00000000 
               00000000         AREA             MyConst,DATA,READONLY
- 1028 00000000         ;>>>>> begin constants here <<<<<
- 1029 00000000         
- 1030 00000000         ;>>>>>   end constants here <<<<<
- 1031 00000000                 ALIGN
- 1032 00000000         ;****************************************************************
- 1033 00000000         ;Variables
- 1034 00000000                 AREA             MyData,DATA,READWRITE
- 1035 00000000                 EXPORT           Count
- 1036 00000000                 EXPORT           RunStopWatch
- 1037 00000000                 EXPORT           RxQRecord
- 1038 00000000         ;>>>>> begin variables here <<<<<
- 1039 00000000 00 00 00 
+ 1029 00000000         ;>>>>> begin constants here <<<<<
+ 1030 00000000         
+ 1031 00000000         ;>>>>>   end constants here <<<<<
+ 1032 00000000                 ALIGN
+ 1033 00000000         ;****************************************************************
+ 1034 00000000         ;Variables
+ 1035 00000000                 AREA             MyData,DATA,READWRITE
+ 1036 00000000                 EXPORT           Count
+ 1037 00000000                 EXPORT           RunStopWatch
+ 1038 00000000                 EXPORT           RxQRecord
+ 1039 00000000         ;>>>>> begin variables here <<<<<
+ 1040 00000000 00 00 00 
               00       TxQ     SPACE            QBUFSIZE
- 1040 00000004 00 00 00 
+ 1041 00000004 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 TxQRecord
-                               SPACE            QRECSIZE
 
 
 
 ARM Macro Assembler    Page 30 Embedded LED Game Functions and Drivers
 
 
- 1041 00000016 00 00           ALIGN
- 1042 00000018 00 00 00 
+                               SPACE            QRECSIZE
+ 1042 00000016 00 00           ALIGN
+ 1043 00000018 00 00 00 
               00       RxQ     SPACE            QBUFSIZE
- 1043 0000001C 00 00 00 
+ 1044 0000001C 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 RxQRecord
                                SPACE            QRECSIZE
- 1044 0000002E 00 00           ALIGN
- 1045 00000030 00 00 00 
+ 1045 0000002E 00 00           ALIGN
+ 1046 00000030 00 00 00 
               00       MainQ   SPACE            QBUFSIZE
- 1046 00000034 00 00 00 
+ 1047 00000034 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 MainQRecord
                                SPACE            QRECSIZE
- 1047 00000046 00 00           ALIGN
- 1048 00000048 00      RunStopWatch
+ 1048 00000046 00 00           ALIGN
+ 1049 00000048 00      RunStopWatch
                                SPACE            1
- 1049 00000049 00 00 00        ALIGN
- 1050 0000004C 00 00 00 
+ 1050 00000049 00 00 00        ALIGN
+ 1051 0000004C 00 00 00 
               00       Count   SPACE            4
- 1051 00000050         ;>>>>>   end variables here <<<<<
- 1052 00000050                 ALIGN
- 1053 00000050                 END
+ 1052 00000050         ;>>>>>   end variables here <<<<<
+ 1053 00000050                 ALIGN
+ 1054 00000050                 END
 Command Line: --debug --length=49 --width=120 --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=interwork --depend=.\objects\
-lab12.d -o.\objects\lab12.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\
-Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 525" --prede
-fine="_RTE_ SETA 1" --predefine="MKL46Z256xxx4 SETA 1" --list=.\listings\lab12.lst lab12.s
+lab12.d -o.\objects\lab12.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include -IC:\Keil_v5\ARM\
+PACK\Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 524" --
+predefine="_RTE_ SETA 1" --predefine="MKL46Z256xxx4 SETA 1" --list=.\listings\lab12.lst lab12.s

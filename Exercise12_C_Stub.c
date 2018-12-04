@@ -242,15 +242,8 @@ UInt8 Round = 1;
 /*
  * Generates a random number 0-3 for use in deciding which LEDs to enable
  */
-UInt8 randomNumGen(void){
-	UInt8 temp;
-	Count = 0;
-	RunStopWatch = 1;
-	GetChar();
-	RunStopWatch = 0;
-	temp = Count;
-	Count = 0;
-	return temp % 4;
+UInt8 randomNumGen(int c){
+	return c % 4;
 }
 
 /*
@@ -300,13 +293,19 @@ int main (void) {
 	*/
 	PutStringSB("Instructions for dummies: r = red, g = green, b = both, and n = neither.", MAX_STRING);
 	PutStringSB("\r\nHit the button corresponding to which of the LED(s) lights up.\r\n", MAX_STRING);
+  StartTimer();
+  PutStringSB("\r\nPress any key to begin.", MAX_STRING);
+  while(!isKeyPressed)
+    setIsKeyPressed();
+  RunStopWatch = 0;
+  GetChar();
 	for(;;){
 		do {
 			UInt16 RoundLength = (BASE_TIME_LIMIT - Round) * 100;
 			PutStringSB("You have ", MAX_STRING);
 			PutNumU(RoundLength / 100);
 			PutStringSB(" seconds.\r\n", MAX_STRING);
-			UInt8 color = randomNumGen();
+			UInt8 color = randomNumGen(Count);
 			// Set a LED based on the randomly generated integer
 			if (color == 0) {
 				Set_LED(0);
@@ -328,7 +327,7 @@ int main (void) {
 			while (TRUE){
 				PutChar('>');
 				// Start the timer
-				RunStopWatch = 1;
+        StartTimer();
 				// Loop until a key is pressed or the time limit has been passed
 				while (!isKeyPressed){
 					if (Count <= RoundLength){
@@ -392,7 +391,9 @@ int main (void) {
 		score = 0;
 		Round = 1;
 		PutStringSB("A new game has begun!\r\n", MAX_STRING);
-		PutStringSB("Enter a character when you are ready to begin.\r\n", MAX_STRING);
+    PutStringSB("Instructions for dummies: r = red, g = green, b = both, and n = neither.", MAX_STRING);
+    PutStringSB("\r\nHit the button corresponding to which of the LED(s) lights up.", MAX_STRING);
+    PutStringSB("\r\nPress any key to begin.", MAX_STRING);
 		while (!isKeyPressed) setIsKeyPressed();
 		GetChar();
 	}
