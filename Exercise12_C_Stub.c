@@ -392,7 +392,7 @@ int main (void) {
 		score = 0;
 		Round = 1;
 		PutStringSB("A new game has begun!\r\n", MAX_STRING);
-		PutStringSB("Enter a character when you are ready to begin.", MAX_STRING);
+		PutStringSB("Enter a character when you are ready to begin.\r\n", MAX_STRING);
 		while (!isKeyPressed) setIsKeyPressed();
 		GetChar();
 	}
