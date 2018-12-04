@@ -323,47 +323,52 @@ int main (void) {
 				greenEnabled = TRUE;
 				redEnabled = TRUE;
 			}
+			while (TRUE){
 			// Start the timer
 			RunStopWatch = 1;
 			// Loop until a key is pressed or the time limit has been passed
-			while (!isKeyPressed){
-				if (Count <= RoundLength){
-				setIsKeyPressed();
-				} else if (Count > RoundLength) {
-					PutStringSB("\r\nYou took too long! Try again next time loser.\r\n", MAX_STRING);
+				while (!isKeyPressed){
+					if (Count <= RoundLength){
+					setIsKeyPressed();
+					} else if (Count > RoundLength) {
+						PutStringSB("\r\nYou took too long! Try again next time loser.\r\n", MAX_STRING);
+						break;
+					}
+				}
+				RunStopWatch = 0;
+				isKeyPressed = FALSE;
+				if (Count > RoundLength) break;
+				// Check if the user entered the right character
+				input = GetChar();
+				if (greenEnabled && !redEnabled && input == 'g'){
+					scoring(Count, Round, RoundLength);
+					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutNumU(score);
+					PutStringSB("!\r\n", 3);
 					break;
+				} else if (!greenEnabled && redEnabled && input == 'r'){
+					scoring(Count, Round, RoundLength);
+					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutNumU(score);
+					PutStringSB("!\r\n", 3);
+					break;
+				} else if (greenEnabled && redEnabled && input == 'b'){
+					scoring(Count, Round, RoundLength);
+					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutNumU(score);
+					PutStringSB("!\r\n", 3);
+					break;
+				} else if (!greenEnabled && !redEnabled && input == 'n'){
+					scoring(Count, Round, RoundLength);
+					PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
+					PutNumU(score);
+					PutStringSB("!\r\n", 3);
+					break;
+				} else {
+					PutStringSB("\r\nIncorrect answer, you suck. Try again, loser.", MAX_STRING);
 				}
 			}
-			RunStopWatch = 0;
-			isKeyPressed = FALSE;
-			if (Count > RoundLength) break;
-			// Check if the user entered the right character
-			input = GetChar();
-			if (greenEnabled && !redEnabled && input == 'g'){
-				scoring(Count, Round, RoundLength);
-				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
-				PutNumU(score);
-				PutStringSB("!\r\n", 3);
-			} else if (!greenEnabled && redEnabled && input == 'r'){
-				scoring(Count, Round, RoundLength);
-				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
-				PutNumU(score);
-				PutStringSB("!\r\n", 3);
-			} else if (greenEnabled && redEnabled && input == 'b'){
-				scoring(Count, Round, RoundLength);
-				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
-				PutNumU(score);
-				PutStringSB("!\r\n", 3);
-			} else if (!greenEnabled && !redEnabled && input == 'n'){
-				scoring(Count, Round, RoundLength);
-				PutStringSB("\r\nCorrect! Your current score is ", MAX_STRING);
-				PutNumU(score);
-				PutStringSB("!\r\n", 3);
-			} else {
-				PutStringSB("\r\nIncorrect answer, you suck. Try again next time loser.\r\n", MAX_STRING);
-				break;
-			}
-			Round ++;
+				Round ++;
 	} while (Round <= 10);
 		// Reset the game data for a new game to be played
 		PutStringSB("Your final score is : ", MAX_STRING);
@@ -371,6 +376,7 @@ int main (void) {
 		PutStringSB("\r\n", 2);
 		score = 0;
 		Round = 1;
+		PutStringSB("A new game has begun!\r\n", MAX_STRING);
 	}
 	
 	return 0;	

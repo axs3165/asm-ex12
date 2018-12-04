@@ -1426,6 +1426,6 @@ ARM Macro Assembler    Page 30 Embedded LED Game Functions and Drivers
  1052 00000050                 ALIGN
  1053 00000050                 END
 Command Line: --debug --length=49 --width=120 --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=interwork --depend=.\objects\
-lab12.d -o.\objects\lab12.o -I.\RTE\_Target_1 -IE:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include -IE:\Keil_v5\ARM\PACK\
+lab12.d -o.\objects\lab12.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\
 Keil\Kinetis_KLxx_DFP\1.14.0\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 525" --prede
 fine="_RTE_ SETA 1" --predefine="MKL46Z256xxx4 SETA 1" --list=.\listings\lab12.lst lab12.s
